@@ -1,0 +1,23 @@
+body {
+  @apply bg-gray-100;
+}
+
+h1 {
+  @apply text-2xl font-extrabold text-cyan-800 md:text-3xl lg:text-4xl my-2;
+}
+h2 {
+  @apply text-xl font-bold text-cyan-800 md:text-xl lg:text-2xl my-2 border-b border-cyan-700/10;
+}
+h3 {
+  @apply text-lg md:text-lg lg:text-xl font-bold text-emerald-800 opacity-80;
+}
+h4 {
+  @apply font-semibold;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-2 sm:px-6 lg:px-8;
+}
+.page {
+  @apply max-w-5xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8;
+}
