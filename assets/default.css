@@ -21,3 +21,11 @@ h4 {
 .page {
   @apply max-w-5xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8;
 }
+
+.btn {
+  @apply inline-flex w-full justify-center rounded-md bg-white hover:bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto;
+}
+
+.btn-green {
+  @apply bg-emerald-700/90 hover:bg-emerald-700 text-white;
+}
