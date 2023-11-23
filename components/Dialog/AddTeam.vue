@@ -1,8 +1,8 @@
 <script setup>
   import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
-  import MdiTable from '~icons/mdi/table-large-plus';
-  import MdiDate from '~icons/mdi/calendar';
-  import MdiHost from '~icons/mdi/microphone-variant';
+  import MdiTeam from '~icons/mdi/account-group';
+  import MdiEntry from '~icons/mdi/pound-box-outline';
+  import MdiName from '~icons/mdi/rename-box-outline';
 
   const props = defineProps({
     open: {
@@ -13,29 +13,39 @@
 
   const emit = defineEmits(['close']);
 
-  const game_date = useLocalStorage('game-date');
-  const game_host = useLocalStorage('game-host');
-  const game_teams = useLocalStorage('game-teams');
+  const game_teams = useLocalStorage('game-teams', {});
   
-  const date = ref(new Date().toISOString().split('T')[0]);
-  const host = ref();
-  const date_required = ref(false);
-  const host_required = ref(false);
+  const entry = ref(Object.keys(game_teams.value).length+1);
+  const name = ref();
+  const entry_required = ref(false);
+  const name_required = ref(false);
 
-  const create = () => {
-    host_required.value = !host.value || host.value === '';
-    date_required.value = !date.value || date.value === '';
+  const add = () => {
+    entry_required.value = !entry.value || entry.value === '';
+    name_required.value = !name.value || name.value === '';
 
-    if ( !host_required.value && !date_required.value ) {
-      game_date.value = date.value;
-      game_host.value = host.value;
-      game_teams.value = JSON.stringify({});
+    if ( !entry_required.value && !name_required.value ) {
+      game_teams.value[name.value] = {
+        entry: entry.value,
+        round1: 0,
+        round2: 0,
+        round3: 0,
+        round4: 0,
+        round5: 0
+      }
+      name.value = undefined;
       close();
     }
   }
   const close = () => {
     emit('close');
   }
+
+  watch(() => props.open, (v) => {
+    if ( v ) {
+      entry.value = Object.keys(game_teams.value).length+1;
+    }
+  });
 </script>
 
 <template>
@@ -62,7 +72,7 @@
 
                 <!-- Dialog Icon -->
                 <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-emerald-700/10 sm:mx-0 sm:h-10 sm:w-10">
-                  <MdiTable class="h-6 w-6 text-emerald-700" aria-hidden="true" />
+                  <MdiTeam class="h-6 w-6 text-emerald-700" aria-hidden="true" />
                 </div>
 
                 <!-- Dialog Content -->
@@ -70,41 +80,40 @@
 
                   <!-- Dialog Title -->
                   <DialogTitle as="h3" class="text-base font-semibold leading-6 text-gray-900">
-                    Create New Game
+                    Add Team
                   </DialogTitle>
 
                   <!-- Dialog Body -->
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">
-                      Create a new game by selecting the date and naming the host.
-                      <span class="font-semibold">This will clear any existing scores.</span>
+                      Enter the name of the team to add to the game.
                     </p>
                   </div>
 
                   <div class="mt-2">
 
-                    <!-- Date -->
+                    <!-- Entry -->
                     <div class="mt-4">
-                      <label for="email" class="label">Date:</label>
+                      <label for="email" class="label">Entry:</label>
                       <div class="flex-1 relative rounded-md shadow-sm mt-2">
                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                          <MdiDate class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                          <MdiEntry class="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </div>
-                        <input v-model="date" type="date" name="date" id="date" class="input" />
+                        <input v-model="entry" type="number" name="entry" id="entry" class="input" />
                       </div>
-                      <p v-if="date_required && (!date || date === '')" class="required">Date is required!</p>
+                      <p v-if="entry_required && (!entry || entry === '')" class="required">Entry number is required!</p>
                     </div>
 
-                    <!-- Host -->
+                    <!-- Name -->
                     <div class="mt-4">
-                      <label for="email" class="label">Host:</label>
+                      <label for="email" class="label">Name:</label>
                       <div class="relative mt-2 rounded-md shadow-sm">
                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                          <MdiHost class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                          <MdiName class="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </div>
-                        <input v-model="host" type="text" name="host" id="host" class="input" placeholder="Name of Host" />
+                        <input v-model="name" type="text" name="name" id="name" class="input" placeholder="Name of Team" />
                       </div>
-                      <p v-if="host_required && (!host || host === '')" class="required">Host name is required!</p>
+                      <p v-if="name_required && (!name || name === '')" class="required">Team name is required!</p>
                     </div>
                   </div>
 
@@ -113,8 +122,8 @@
 
               <!-- Dialog Footer -->
               <div class="mt-5 sm:mt-8 sm:flex sm:flex-row-reverse sm:gap-x-4">
-                <button type="button" class="btn btn-green" @click="create">
-                  Create Game
+                <button type="button" class="btn btn-green" @click="add">
+                  Add Team
                 </button>
                 <button type="button" class="btn" @click="close">
                   Cancel
