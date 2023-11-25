@@ -12,7 +12,7 @@
       return teams.value[props.team][`round${props.round}`];
     },
     set: (v) => {
-      teams.value[props.team][`round${props.round}`] = v;
+      teams.value[props.team][`round${props.round}`] = v ? v : undefined;
     }
   });
 

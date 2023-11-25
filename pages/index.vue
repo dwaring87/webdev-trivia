@@ -52,8 +52,12 @@
                       :class="[index % 2 ? 'bg-gray-100' : 'bg-white', 'hover:bg-amber-700/10']">
                     <td class="table-cell">{{ props.entry}}</td>
                     <td class="table-cell text-left font-medium text-gray-900">{{ team }}</td>
-                    <td class="table-cell bg-amber-700/20"></td>
-                    <td class="table-cell bg-amber-700/20"></td>
+                    <td class="table-cell bg-amber-700/20">
+                      <TableRank :team="team" />
+                    </td>
+                    <td class="table-cell bg-amber-700/20">
+                      <TableTotal :team="team" />
+                    </td>
                     <td v-for="i in 5" class="table-cell cursor-pointer" @click="editRound = i" :key="i">
                       <TableScore :team="team" :round="i" :edit="editRound === i" @save="editRound = undefined" />
                     </td>
