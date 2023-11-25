@@ -10,7 +10,6 @@
       default: false
     }
   });
-
   const emit = defineEmits(['close']);
 
   const game_date = useLocalStorage('game-date');
@@ -19,6 +18,7 @@
   
   const date = ref(new Date().toISOString().split('T')[0]);
   const host = ref();
+  const host_ref = ref();
   const date_required = ref(false);
   const host_required = ref(false);
 
@@ -36,6 +36,15 @@
   const close = () => {
     emit('close');
   }
+
+  watch(() => props.open, (v) => {
+    if ( v ) {
+      nextTick(() => {
+        date.value = new Date().toISOString().split('T')[0];
+        host_ref.value.focus();
+      });
+    }
+  });
 </script>
 
 <template>
@@ -102,7 +111,8 @@
                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                           <MdiHost class="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </div>
-                        <input v-model="host" type="text" name="host" id="host" class="input" placeholder="Name of Host" />
+                        <input v-model="host" ref="host_ref" v-on:keyup.enter="create()"
+                          type="text" name="host" id="host" class="input" placeholder="Name of Host" />
                       </div>
                       <p v-if="host_required && (!host || host === '')" class="required">Host name is required!</p>
                     </div>

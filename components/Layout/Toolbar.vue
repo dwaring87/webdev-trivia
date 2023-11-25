@@ -14,9 +14,10 @@
           </div>
           <div class="flex-grow"></div>
           <div class="flex gap-2 lg:gap-4">
-            <NuxtLink to="#" @click="showDialog = true"><MdiNewGame class="inline sm:mr-2" />
+            <button class='btn btn-white' @click="showDialog = true">
+              <MdiNewGame class="inline sm:mr-2" />
               <span class="hidden sm:inline">New Game</span>
-            </NuxtLink>
+            </button>
           </div>
         </div>
       </div>

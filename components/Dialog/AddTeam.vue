@@ -10,28 +10,31 @@
       default: false
     }
   });
-
   const emit = defineEmits(['close']);
 
   const game_teams = useLocalStorage('game-teams', {});
   
   const entry = ref(Object.keys(game_teams.value).length+1);
   const name = ref();
+  const name_ref = ref();
   const entry_required = ref(false);
   const name_required = ref(false);
+  const name_exists = ref(false);
 
   const add = () => {
     entry_required.value = !entry.value || entry.value === '';
     name_required.value = !name.value || name.value === '';
+    name_exists.value = Object.keys(game_teams.value).includes(name.value);
 
-    if ( !entry_required.value && !name_required.value ) {
+    if ( !entry_required.value && !name_required.value && !name_exists.value ) {
       game_teams.value[name.value] = {
         entry: entry.value,
-        round1: 0,
-        round2: 0,
-        round3: 0,
-        round4: 0,
-        round5: 0
+        round1: false,
+        round2: false,
+        round3: false,
+        round4: false,
+        round5: false,
+        bowlOff: false
       }
       name.value = undefined;
       close();
@@ -44,6 +47,11 @@
   watch(() => props.open, (v) => {
     if ( v ) {
       entry.value = Object.keys(game_teams.value).length+1;
+      name_exists.value = false;
+      name_required.value = false;
+      nextTick(() => {
+        name_ref.value.focus();
+      });
     }
   });
 </script>
@@ -111,9 +119,11 @@
                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                           <MdiName class="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </div>
-                        <input v-model="name" type="text" name="name" id="name" class="input" placeholder="Name of Team" />
+                        <input v-model="name" ref="name_ref" v-on:keyup.enter="add()"
+                          type="text" name="name" id="name" class="input" placeholder="Name of Team" />
                       </div>
                       <p v-if="name_required && (!name || name === '')" class="required">Team name is required!</p>
+                      <p v-if="name_exists" class="required">Team name already exists!</p>
                     </div>
                   </div>
 
