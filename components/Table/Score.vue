@@ -6,13 +6,13 @@
   });
   const emit = defineEmits(['save']);
 
-  const teams = useLocalStorage('game-teams', {});
+  const { scores } = useGame();
   const score = computed({
     get: () => {
-      return teams.value[props.team][`round${props.round}`];
+      return scores.value[props.team][`round${props.round}`];
     },
     set: (v) => {
-      teams.value[props.team][`round${props.round}`] = v ? v : undefined;
+      scores.value[props.team][`round${props.round}`] = !!v ? v : false;
     }
   });
 

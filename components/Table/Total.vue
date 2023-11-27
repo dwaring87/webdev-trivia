@@ -3,15 +3,11 @@
     team: String
   });
 
-  const teams = useLocalStorage('game-teams', {});
+  const { scores } = useGame();
   const total = computed(() => {
-    let total = 0;
-    for ( const r of [1,2,3,4,5] ) {
-      const s = teams.value[props.team][`round${r}`];
-      if ( s ) total = total + s;
-    }
-    return total === 0 ? '&mdash;' : total;
-  });
+    const t = scores.value[props.team].total;
+    return !!t ? t : '&mdash;';
+  })
 </script>
 
 <template>

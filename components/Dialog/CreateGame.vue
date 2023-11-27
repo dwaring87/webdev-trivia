@@ -12,10 +12,7 @@
   });
   const emit = defineEmits(['close']);
 
-  const game_date = useLocalStorage('game-date');
-  const game_host = useLocalStorage('game-host');
-  const game_teams = useLocalStorage('game-teams');
-  
+  const { createGame } = useGame();
   const date = ref(new Date().toISOString().split('T')[0]);
   const host = ref();
   const host_ref = ref();
@@ -27,9 +24,7 @@
     date_required.value = !date.value || date.value === '';
 
     if ( !host_required.value && !date_required.value ) {
-      game_date.value = date.value;
-      game_host.value = host.value;
-      game_teams.value = JSON.stringify({});
+      createGame(date.value, host.value);
       close();
     }
   }

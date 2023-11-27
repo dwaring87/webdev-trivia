@@ -12,9 +12,8 @@
   });
   const emit = defineEmits(['close']);
 
-  const game_teams = useLocalStorage('game-teams', {});
-  
-  const entry = ref(Object.keys(game_teams.value).length+1);
+  const { teams, nextEntry, addTeam } = useGame();
+  const entry = ref();
   const name = ref();
   const name_ref = ref();
   const entry_required = ref(false);
@@ -24,18 +23,10 @@
   const add = () => {
     entry_required.value = !entry.value || entry.value === '';
     name_required.value = !name.value || name.value === '';
-    name_exists.value = Object.keys(game_teams.value).includes(name.value);
+    name_exists.value = teams.value.includes(name.value);
 
     if ( !entry_required.value && !name_required.value && !name_exists.value ) {
-      game_teams.value[name.value] = {
-        entry: entry.value,
-        round1: false,
-        round2: false,
-        round3: false,
-        round4: false,
-        round5: false,
-        bowlOff: false
-      }
+      addTeam(entry.value, name.value);
       name.value = undefined;
       close();
     }
@@ -46,10 +37,10 @@
 
   watch(() => props.open, (v) => {
     if ( v ) {
-      entry.value = Object.keys(game_teams.value).length+1;
-      name_exists.value = false;
-      name_required.value = false;
       nextTick(() => {
+        entry.value = nextEntry();
+        name_exists.value = false;
+        name_required.value = false;
         name_ref.value.focus();
       });
     }

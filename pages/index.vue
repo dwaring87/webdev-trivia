@@ -3,10 +3,7 @@
   import MdiPlus from '~icons/mdi/plus';
   import MdiTeam from '~icons/mdi/account-group';
 
-  const date = useLocalStorage('game-date');
-  const host = useLocalStorage('game-host');
-  const teams = useLocalStorage('game-teams', {});
-
+  const { date, host, teams } = useGame();
   const showGameDialog = ref(false);
   const showTeamDialog = ref(false);
   const editRound = ref(false);
@@ -48,19 +45,15 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white text-center text-gray-500">
-                  <tr v-for="[index, [team, props]] of Object.entries(Object.entries(teams))" :key="team"
+                  <tr v-for="(team, index) in teams" :key="team"
                       :class="[index % 2 ? 'bg-gray-100' : 'bg-white', 'hover:bg-amber-700/10']">
-                    <td class="table-cell">{{ props.entry}}</td>
-                    <td class="table-cell text-left font-medium text-gray-900">{{ team }}</td>
-                    <td class="table-cell bg-amber-700/20">
-                      <TableRank :team="team" />
-                    </td>
-                    <td class="table-cell bg-amber-700/20">
-                      <TableTotal :team="team" />
-                    </td>
-                    <td v-for="i in 5" class="table-cell cursor-pointer" @click="editRound = i" :key="i">
-                      <TableScore :team="team" :round="i" :edit="editRound === i" @save="editRound = undefined" />
-                    </td>
+                    <TableEntry class="tale-cell" :team="team" />
+                    <TableTeam class="table-cell text-left font-medium text-gray-900" :team="team" />
+                    <TableRank class="table-cell bg-amber-700/20" :team="team" />
+                    <TableTotal class="table-cell bg-amber-700/20" :team="team" />
+                    <TableScore v-for="i in 5" :key="`round-${i}`" class="table-cell cursor-pointer" 
+                      :team="team" :round="i" :edit="editRound === i" 
+                      @click="editRound = i" @save="editRound = undefined" />
                   </tr>
                 </tbody>
               </table>
@@ -68,7 +61,6 @@
           </div>
         </div>
       </div>
-
       <DialogAddTeam :open="showTeamDialog" @close="showTeamDialog = false" />
     </div>
 

@@ -29,8 +29,11 @@ h4 {
   @apply p-1;
 }
 .btn-green {
-  @apply bg-emerald-700/90 hover:bg-emerald-700 ring-emerald-500/40 text-white;
+  @apply bg-emerald-700/90 hover:bg-emerald-700 text-white ring-emerald-700/20;
 }
 .btn-white {
   @apply bg-white/90 hover:bg-white text-gray-800;
+}
+.btn-red {
+  @apply bg-rose-800/90 hover:bg-rose-800 text-white ring-rose-800/20;
 }
