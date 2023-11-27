@@ -25,14 +25,14 @@
   <div>
     <div v-if="edit">
       <input v-model="score" v-on:keyup.enter="save()"
-        class="input" type="number" name="score" id="score" />
+        class="input score-input" type="number" name="score" id="score" />
     </div>
     <p v-else class="py-2" v-html="!! score ? score : '&mdash;'"></p>
   </div>
 </template>
 
 <style scoped>
-  .input {
-    @apply w-[60px] bg-zinc-800/20 border border-zinc-800 text-gray-900 px-2 py-1 rounded-md;
+  .score-input {
+    @apply max-w-[60px] mx-auto px-2 py-0 border-emerald-800 bg-emerald-800/10 !important;
   }
 </style>

@@ -22,18 +22,25 @@ h4 {
   @apply max-w-5xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8;
 }
 
+.input {
+  @apply block w-full rounded-md border-2 border-gray-600/50 py-1.5 pl-10 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-amber-700;
+}
+.label {
+  @apply block text-sm font-medium leading-6 text-gray-900;
+}
+
 .btn {
-  @apply inline-flex w-full justify-center rounded-md bg-white hover:bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto;
+  @apply inline-flex w-full justify-center rounded-md bg-white hover:bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm sm:mt-0 sm:w-auto border border-gray-800/20 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-amber-700;
 }
 .btn-small {
   @apply p-1;
 }
 .btn-green {
-  @apply bg-emerald-700/90 hover:bg-emerald-700 text-white ring-emerald-700/20;
+  @apply bg-emerald-700/90 hover:bg-emerald-700 text-white;
 }
 .btn-white {
   @apply bg-white/90 hover:bg-white text-gray-800;
 }
 .btn-red {
-  @apply bg-rose-800/90 hover:bg-rose-800 text-white ring-rose-800/20;
+  @apply bg-rose-800/90 hover:bg-rose-800 text-white;
 }
