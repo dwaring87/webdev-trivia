@@ -12,7 +12,7 @@
   });
   const emit = defineEmits(['close']);
 
-  const { teams, nextEntry, addTeam } = useGame();
+  const { scores, nextEntry, addTeam } = useGame();
   const entry = ref();
   const name = ref();
   const name_ref = ref();
@@ -23,7 +23,7 @@
   const add = () => {
     entry_required.value = !entry.value || entry.value === '';
     name_required.value = !name.value || name.value === '';
-    name_exists.value = teams.value.includes(name.value);
+    name_exists.value = Object.keys(scores.value).includes(name.value);
 
     if ( !entry_required.value && !name_required.value && !name_exists.value ) {
       addTeam(entry.value, name.value);
