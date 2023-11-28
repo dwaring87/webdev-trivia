@@ -1,6 +1,6 @@
 <script setup>
   import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
-  import MdiDelete from '~icons/mdi/delete';
+  import MdiClear from '~icons/mdi/eraser';
 
   const props = defineProps({
     open: {
@@ -10,10 +10,10 @@
   });
   const emit = defineEmits(['close']);
 
-  const { clearGame } = useGame();
+  const { clearScores } = useGame();
 
   const clear = () => {
-    clearGame();
+    clearScores();
     close();
   }
   const close = () => {
@@ -44,8 +44,8 @@
               <div class="sm:flex sm:items-start">
 
                 <!-- Dialog Icon -->
-                <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-800/10 sm:mx-0 sm:h-10 sm:w-10">
-                  <MdiDelete class="h-6 w-6 text-rose-800" aria-hidden="true" />
+                <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-700/10 sm:mx-0 sm:h-10 sm:w-10">
+                  <MdiClear class="h-6 w-6 text-amber-700" aria-hidden="true" />
                 </div>
 
                 <!-- Dialog Content -->
@@ -53,14 +53,13 @@
 
                   <!-- Dialog Title -->
                   <DialogTitle as="h3" class="text-base font-semibold leading-6 text-gray-900">
-                    Delete Game?
+                    Clear Scores?
                   </DialogTitle>
 
                   <!-- Dialog Body -->
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">
-                      Are you sure you want to delete the current game?  
-                      <strong>This will remove all of the teams and their scores!</strong>
+                      Are you sure you want to <strong>delete all of the scores</strong> from the current game?  
                     </p>
                   </div>
 
@@ -69,8 +68,8 @@
 
               <!-- Dialog Footer -->
               <div class="mt-5 sm:mt-8 sm:flex sm:flex-row-reverse sm:gap-x-4">
-                <button type="button" class="btn btn-red mb-2" @click="clear">
-                  Delete Game
+                <button type="button" class="btn btn-amber mb-2" @click="clear">
+                  Clear Scores
                 </button>
                 <button type="button" class="btn mb-2" @click="close">
                   Cancel

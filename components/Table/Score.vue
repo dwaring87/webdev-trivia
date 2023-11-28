@@ -2,29 +2,39 @@
   const props = defineProps({
     team: String,
     round: Number,
-    edit: Boolean
+    edit: Boolean,
+    focus: Boolean
   });
   const emit = defineEmits(['save']);
 
-  const { scores } = useGame();
+  const { getScore, setScore } = useGame();
   const score = computed({
     get: () => {
-      return scores.value[props.team][`round${props.round}`];
+      return getScore(props.team, props.round);
     },
     set: (v) => {
-      scores.value[props.team][`round${props.round}`] = !!v ? v : false;
+      setScore(props.team, props.round, v);
     }
   });
 
   const save = () => {
     emit('save');
   }
+
+  const score_ref = ref();
+  watch(() => props.focus, (v) => {
+    if ( v ) {
+      nextTick(() => {
+        score_ref.value.focus();
+      });
+    }
+  });
 </script>
 
 <template>
   <div>
     <div v-if="edit">
-      <input v-model="score" v-on:keyup.enter="save()"
+      <input v-model="score" v-on:keyup.enter="save()" ref="score_ref"
         class="input score-input" type="number" name="score" id="score" />
     </div>
     <p v-else class="py-2" v-html="!! score ? score : '&mdash;'"></p>

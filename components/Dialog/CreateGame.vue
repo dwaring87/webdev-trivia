@@ -81,7 +81,7 @@
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">
                       Create a new game by selecting the date and naming the host.
-                      <span class="font-semibold">This will clear any existing scores.</span>
+                      <span class="font-semibold">This will remove any existing teams and their scores.</span>
                     </p>
                   </div>
 
@@ -118,10 +118,10 @@
 
               <!-- Dialog Footer -->
               <div class="mt-5 sm:mt-8 sm:flex sm:flex-row-reverse sm:gap-x-4">
-                <button type="button" class="btn btn-green" @click="create">
+                <button type="button" class="btn btn-green mb-2" @click="create">
                   Create Game
                 </button>
-                <button type="button" class="btn" @click="close">
+                <button type="button" class="btn mb-2" @click="close">
                   Cancel
                 </button>
               </div>

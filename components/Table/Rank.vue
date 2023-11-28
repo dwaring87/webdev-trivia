@@ -11,5 +11,7 @@
 </script>
 
 <template>
-  <p class="font-semibold" v-html="rank"></p>
+  <td>
+    <p class="font-semibold" v-html="rank"></p>
+  </td>
 </template>

@@ -3,15 +3,23 @@ export default () => {
   const host = useLocalStorage('game-host');
   const scores = useLocalStorage('game-scores', {});
 
-  const clearGame = () => {
-    date.value = '';
-    host.value = '';
-    scores.value = {};
-  }
-
   const createGame = (d, h) => {
     date.value = d;
     host.value = h;
+    scores.value = {};
+  }
+
+  const clearScores = () => {
+    for ( const team in scores.value ) {
+      for ( let round = 1; round <= 5; round ++ ) {
+        setScore(team, round);
+      }
+    }
+  }
+
+  const clearGame = () => {
+    date.value = '';
+    host.value = '';
     scores.value = {};
   }
 
@@ -63,14 +71,23 @@ export default () => {
     }
   }
 
-  watch(scores, (updated) => {
-    
+  const getScore = (team, round) => {
+    return scores.value[team][`round${round}`];
+  }
+
+  const setScore = (team, round, score) => {
+    scores.value[team][`round${round}`] = score;
+    _calc();
+  }
+
+  const _calc = () => {
+
     // Calculate the team totals
     const totals = [];
-    for ( const team in updated ) {
+    for ( const team in scores.value ) {
       let team_total = 0;
       for ( let round = 1; round <= 5; round++ ) {
-        const round_score = updated[team][`round${round}`];
+        const round_score = scores.value[team][`round${round}`];
         if ( round_score ) team_total = team_total + round_score;
       }
       scores.value[team].total = team_total > 0 ? team_total : false;
@@ -80,16 +97,17 @@ export default () => {
     // Set the ranks
     const unique = [...new Set(totals)];
     const sorted = unique.sort((a, b) => b - a);
-    for ( const team in updated ) {
-      const team_rank = sorted.indexOf(updated[team].total) + 1;
+    for ( const team in scores.value ) {
+      const team_rank = sorted.indexOf(scores.value[team].total) + 1;
       scores.value[team].rank = team_rank;
     }
 
-  });
+  }
 
   return {
     date, host, scores, teams,
-    clearGame, createGame, addTeam, removeTeam,
-    nextEntry
+    createGame, clearScores, clearGame,
+    addTeam, removeTeam, nextEntry,
+    getScore, setScore
   }
 }

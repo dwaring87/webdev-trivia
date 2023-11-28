@@ -1,6 +1,6 @@
 <script setup>
   import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
-  import MdiTeam from '~icons/mdi/account-group';
+  import MdiTeam from '~icons/mdi/account-multiple-plus';
   import MdiEntry from '~icons/mdi/pound-box-outline';
   import MdiName from '~icons/mdi/rename-box-outline';
 
@@ -123,10 +123,10 @@
 
               <!-- Dialog Footer -->
               <div class="mt-5 sm:mt-8 sm:flex sm:flex-row-reverse sm:gap-x-4">
-                <button type="button" class="btn btn-green" @click="add">
+                <button type="button" class="btn btn-green mb-2" @click="add">
                   Add Team
                 </button>
-                <button type="button" class="btn" @click="close">
+                <button type="button" class="btn mb-2" @click="close">
                   Cancel
                 </button>
               </div>

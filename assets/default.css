@@ -44,3 +44,6 @@ h4 {
 .btn-red {
   @apply bg-rose-800/90 hover:bg-rose-800 text-white;
 }
+.btn-amber {
+  @apply bg-amber-600/90 hover:bg-amber-600 text-white;
+}

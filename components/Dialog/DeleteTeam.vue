@@ -70,10 +70,10 @@
 
               <!-- Dialog Footer -->
               <div class="mt-5 sm:mt-8 sm:flex sm:flex-row-reverse sm:gap-x-4">
-                <button type="button" class="btn btn-red" @click="remove">
+                <button type="button" class="btn btn-red mb-2" @click="remove">
                   Delete Team
                 </button>
-                <button type="button" class="btn" @click="close">
+                <button type="button" class="btn mb-2" @click="close">
                   Cancel
                 </button>
               </div>

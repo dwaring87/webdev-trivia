@@ -1,6 +1,5 @@
 <script setup>
   const { teams } = useGame();
-  const editRound = ref();
 
   const sort = ref("entry");
   const descending = ref(false);
@@ -16,6 +15,17 @@
     }
     return _sorted_teams;
   });
+
+  const editRound = ref();
+  const editTeam = ref();
+  const edit = (round, team) => {
+    editRound.value = round;
+    editTeam.value = team;
+  }
+  const save = () => {
+    editRound.value = undefined;
+    editTeam.value = undefined;
+  }
 </script>
 
 <template>
@@ -24,27 +34,59 @@
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
           <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-300">
-              <thead class="bg-amber-700 text-white text-center">
+            <table class="min-w-full divide-y divide-cyan-900">
+              <thead class="bg-cyan-800 text-white text-center">
                 <tr>
-                  <TableHeader label="Entry" sortKey="entry" :sort="sort" :descending="descending" @click="toggleSort('entry')" />
-                  <TableHeader class="text-left" label="Team" sortKey="name" :sort="sort" :descending="descending" @click="toggleSort('name')" />
-                  <TableHeader label="Rank" sortKey="rank" :sort="sort" :descending="descending" @click="toggleSort('rank')" />
-                  <TableHeader label="Total" sortKey="total" :sort="sort" :descending="descending" @click="toggleSort('total')" />
-                  <TableHeader v-for="i in 5" :key="`round${i}`" @click="toggleSort(`round${i}`)"
-                    :label="`Round ${i}`" :sortKey="`round${i}`" :sort="sort" :descending="descending" />
+                  <TableHeader class="hidden sm:table-cell" 
+                    label="Entry" sortKey="entry" :sort="sort" :descending="descending" @click="toggleSort('entry')" />
+                  <TableHeader 
+                    label="Team" sortKey="name" :sort="sort" :descending="descending" @click="toggleSort('name')" />
+                  <TableHeader 
+                    label="Rank" sortKey="rank" :sort="sort" :descending="descending" @click="toggleSort('rank')" />
+                  <TableHeader class="hidden md:table-cell"
+                    label="Total" sortKey="total" :sort="sort" :descending="descending" @click="toggleSort('total')" />
+                  <TableHeader v-for="i in 5" :key="`round${i}`" class="hidden md:table-cell"
+                    :label="`Round ${i}`" :sortKey="`round${i}`" :sort="sort" :descending="descending" @click="toggleSort(`round${i}`)" />
+                  <TableHeader 
+                    label="Scores" class="table-cell md:hidden" />
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 bg-white text-center text-gray-500">
-                <tr v-for="(team, index) in sortedTeams" :key="team"
-                    :class="[index % 2 ? 'bg-gray-100' : 'bg-white', 'hover:bg-amber-700/10']">
-                  <TableEntry class="table-cell" :team="team" />
-                  <TableTeam class="table-cell text-left font-medium text-gray-900" :team="team" />
-                  <TableRank class="table-cell bg-amber-700/20" :team="team" />
-                  <TableTotal class="table-cell bg-amber-700/20" :team="team" />
-                  <TableScore v-for="i in 5" :key="`round-${i}`" class="table-cell cursor-pointer" 
-                    :team="team" :round="i" :edit="editRound === i" 
-                    @click="editRound = i" @save="editRound = undefined" />
+                <tr v-for="(team, team_index) in sortedTeams" :key="team"
+                    :class="[team_index % 2 ? 'bg-gray-100' : 'bg-white', 'hover:bg-orange-800/10']">
+                  <TableEntry class="tc hidden sm:table-cell"
+                    :team="team" />
+                  <TableTeam class="tc text-left font-medium text-gray-900"
+                    :team="team" />
+                  <TableRank class="tc bg-cyan-800/20"
+                    :team="team" />
+                  <TableTotal class="tc bg-cyan-800/20 hidden md:table-cell"
+                    :team="team" />
+                  <TableScore v-for="round in 5" :key="`round-${round}`" class="tc cursor-pointer hidden md:table-cell" 
+                    :team="team" :round="round" :edit="editRound === round" :focus="editRound === round && editTeam === team"
+                    @click="edit(round, team)" @save="save()" />
+                  <td class="tc table-cell md:hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                      <thead>
+                        <tr>
+                          <th>Round</th>
+                          <th>Score</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="round in 5">
+                          <td>{{ round }}</td>
+                          <TableScore class="cursor-pointer min-w-[60px]" 
+                            :team="team" :round="round" :edit="editRound === round" :focus="editRound === round && editTeam === team"
+                            @click="edit(round, team)" @save="save()" />
+                        </tr>
+                        <tr>
+                          <td>Total</td>
+                          <TableTotal :team="team" />
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -58,7 +100,7 @@
 
 
 <style scoped>
-  .table-cell {
-    @apply whitespace-nowrap px-2 py-2 text-sm;
+  .tc {
+    @apply p-1 md:p-2 text-sm;
   }
 </style>

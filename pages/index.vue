@@ -1,7 +1,7 @@
 <script setup>
   import MdiNewGame from '~icons/mdi/table-large-plus';
   import MdiPlus from '~icons/mdi/plus';
-  import MdiTeam from '~icons/mdi/account-group';
+  import MdiTeam from '~icons/mdi/account-multiple-plus';
 
   const { date, host } = useGame();
   const showGameDialog = ref(false);

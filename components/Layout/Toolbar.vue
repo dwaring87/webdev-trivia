@@ -1,9 +1,11 @@
 <script setup>
   import MdiNewGame from '~icons/mdi/table-large-plus';
   import MdiDeleteGame from '~icons/mdi/delete';
+  import MdiClearScores from '~icons/mdi/eraser';
 
   const showCreateDialog = ref(false);
   const showDeleteDialog = ref(false);
+  const showClearDialog = ref(false);
 </script>
 
 <template>
@@ -24,11 +26,16 @@
               <MdiDeleteGame class="inline sm:mr-2" />
               <span class="hidden sm:inline">Delete Game</span>
             </button>
+            <button class='btn btn-amber' @click="showClearDialog = true">
+              <MdiClearScores class="inline sm:mr-2" />
+              <span class="hidden sm:inline">Clear Scores</span>
+            </button>
           </div>
         </div>
       </div>
     </nav>
     <DialogCreateGame :open="showCreateDialog" @close="showCreateDialog = false" />
     <DialogDeleteGame :open="showDeleteDialog" @close="showDeleteDialog = false" />
+    <DialogClearScores :open="showClearDialog" @close="showClearDialog = flase" />
   </div>
 </template>
