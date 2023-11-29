@@ -31,10 +31,10 @@
 <template>
   <div>
     <div class="my-8 flow-root">
-      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-            <table class="min-w-full divide-y divide-cyan-900">
+      <div class="-m-1 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block w-full py-2 align-middle sm:px-6 lg:px-8">
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-md md:rounded-lg">
+            <table class="w-full divide-y divide-cyan-900">
               <thead class="bg-cyan-800 text-white text-center">
                 <tr>
                   <TableHeader class="hidden sm:table-cell" 
@@ -47,8 +47,8 @@
                     label="Total" sortKey="total" :sort="sort" :descending="descending" @click="toggleSort('total')" />
                   <TableHeader v-for="i in 5" :key="`round${i}`" class="hidden md:table-cell"
                     :label="`Round ${i}`" :sortKey="`round${i}`" :sort="sort" :descending="descending" @click="toggleSort(`round${i}`)" />
-                  <TableHeader 
-                    label="Scores" class="table-cell md:hidden" />
+                  <TableHeader class="table-cell md:hidden"
+                    label="Scores" sortKey="total" :sort="sort" :descending="descending" @click="toggleSort('total')" />
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 bg-white text-center text-gray-500">
@@ -66,7 +66,7 @@
                     :team="team" :round="round" :edit="editRound === round" :focus="editRound === round && editTeam === team"
                     @click="edit(round, team)" @save="save()" />
                   <td class="tc table-cell md:hidden">
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="min-w-full divide-y divide-gray-300">
                       <thead>
                         <tr>
                           <th>Round</th>
@@ -75,14 +75,14 @@
                       </thead>
                       <tbody>
                         <tr v-for="round in 5">
-                          <td>{{ round }}</td>
+                          <td class="font-semibold">{{ round }}</td>
                           <TableScore class="cursor-pointer min-w-[60px]" 
                             :team="team" :round="round" :edit="editRound === round" :focus="editRound === round && editTeam === team"
                             @click="edit(round, team)" @save="save()" />
                         </tr>
-                        <tr>
-                          <td>Total</td>
-                          <TableTotal :team="team" />
+                        <tr class="border-t-[0.1rem] border-gray-300">
+                          <td class="font-bold pt-2">Total</td>
+                          <TableTotal :team="team" class="font-semibold pt-2" />
                         </tr>
                       </tbody>
                     </table>

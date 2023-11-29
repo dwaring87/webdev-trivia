@@ -6,6 +6,6 @@
 
 <template>
   <td>
-    <p>{{ team }}</p>
+    <p class="mx-2 md:mx-0">{{ team }}</p>
   </td>
 </template>
