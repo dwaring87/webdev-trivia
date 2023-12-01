@@ -582,6 +582,13 @@
   resolved "https://registry.yarnpkg.com/@headlessui/vue/-/vue-1.7.16.tgz#bdc9d32d329248910325539b99e6abfce0c69f89"
   integrity sha512-nKT+nf/q6x198SsyK54mSszaQl/z+QxtASmgMEJtpxSX2Q0OPJX0upS/9daDyiECpeAsvjkoOrm2O/6PyBQ+Qg==
 
+"@iconify-json/fluent@^1.1.43":
+  version "1.1.43"
+  resolved "https://registry.yarnpkg.com/@iconify-json/fluent/-/fluent-1.1.43.tgz#e459dc5b60b35953be4625654ef0acce5171eb99"
+  integrity sha512-HrEHb2cuCmQ1XoNScALDpyzkuwJMlHjxgdnS/tri2tH02jl/CZGHgzLEpkSPBuIbgPhhCnBap0nP2aK6P4A5Hw==
+  dependencies:
+    "@iconify/types" "*"
+
 "@iconify-json/mdi@^1.1.54":
   version "1.1.54"
   resolved "https://registry.yarnpkg.com/@iconify-json/mdi/-/mdi-1.1.54.tgz#343477417c15fceeaf0f32012d58a4a8d9791786"
