@@ -10,23 +10,26 @@
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { name: 'description', content: 'Trivia score sheet for Atlas QuizBowl', hid: 'description' },
       { name: 'format-detection', content: 'telephone=no' },
-      { name: 'msapplication-TileColor', content: '#065f46' },
-      { name: 'theme-color', content: '#065f46' }
+      { name: 'msapplication-TileColor', content: '#075985' },
+      { name: 'theme-color', content: '#075985' }
     ],
     link: [
-      { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png?v=2' },
-      { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png?v=1' },
-      { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png?v=1' },
-      { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/android-chrome-192x192.png?v=1' },
-      { rel: 'manifest', href: '/site.webmanifest?v=2' },
-      { rel: 'mask-icon', href: '/safari-pinned-tab.svg?v=3', color: '#065f46' },
-      { rel: 'shortcut icon', href: '/favicon.ico?v=2' }
+      { rel: 'manifest', href: '/manifest.webmanifest' },
+      { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+      { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
+      { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
+      { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/android-chrome-192x192.png' },
+      { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#075985' },
+      { rel: 'shortcut icon', href: '/favicon.ico' }
     ]
   });
 </script>
 
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <div>
+    <VitePwaManifest />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </div>
 </template>
