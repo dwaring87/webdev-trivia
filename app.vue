@@ -1,5 +1,7 @@
 <script setup>
-  const BASE_TITLE = "Atlas QuizBowl"
+  const { public:config } = useRuntimeConfig();
+  const BASE_TITLE = config.app_title;
+
   useHead({
     titleTemplate: (title) => {
       return title && title.includes(BASE_TITLE) ? title : title ? `${BASE_TITLE} - ${title}` : BASE_TITLE;
@@ -8,7 +10,7 @@
     charset: 'utf-8',
     meta: [
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { name: 'description', content: 'Trivia score sheet for Atlas QuizBowl', hid: 'description' },
+      { name: 'description', content: `Trivia score sheet for ${BASE_TITLE}`, hid: 'description' },
       { name: 'format-detection', content: 'telephone=no' },
       { name: 'msapplication-TileColor', content: '#075985' },
       { name: 'theme-color', content: '#075985' }

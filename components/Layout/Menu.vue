@@ -9,6 +9,8 @@ import MdiNewGame from '~icons/mdi/table-large-plus';
 import MdiDeleteGame from '~icons/mdi/delete';
 import MdiClearScores from '~icons/mdi/eraser';
 
+const { public:config } = useRuntimeConfig();
+
 const showCreateDialog = ref(false);
 const showDeleteDialog = ref(false);
 const showClearDialog = ref(false);
@@ -65,7 +67,7 @@ const open = ref(false);
         <!-- Logo / Name -->
         <div class="flex sm:flex-1 items-center">
           <MdiLogo class="text-xl sm:text-2xl text-white" />
-          <p class="ml-2 text-sm sm:text-lg text-white font-bold">Atlas QuizBowl</p>
+          <p class="ml-2 text-sm sm:text-lg text-white font-bold">{{ config.app_title }}</p>
         </div>
 
         <!-- Main Toolbar -->

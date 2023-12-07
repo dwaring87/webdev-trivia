@@ -74,5 +74,11 @@ export default defineNuxtConfig({
         }
       ]
     }
+  },
+  runtimeConfig: {
+    public: {
+      app_title: process.env.APP_TITLE,
+      social_facebook: process.env.SOCIAL_FACEBOOK
+    }
   }
 })
