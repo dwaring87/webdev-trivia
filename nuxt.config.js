@@ -1,5 +1,18 @@
 import Icons from 'unplugin-icons/vite';
 
+// Parse social string into array of objects
+// type,name,url|type,name,url...
+const social = [];
+(process.env.APP_SOCIAL || '').split('|').forEach((item) => {
+  const parts = item.split(',');
+  social.push({
+    type: parts[0],
+    name: parts[1],
+    url: parts[2]
+  });
+});
+
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
@@ -77,8 +90,16 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      app_title: process.env.APP_TITLE,
-      social_facebook: process.env.SOCIAL_FACEBOOK
+      title: process.env.APP_TITLE,
+      social: social,
+      firebase: {
+        apiKey: process.env.FIREBASE_API_KEY,
+        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.FIREBASE_APP_ID
+      }
     }
   }
-})
+});

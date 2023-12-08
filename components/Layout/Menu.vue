@@ -67,7 +67,7 @@ const open = ref(false);
         <!-- Logo / Name -->
         <div class="flex sm:flex-1 items-center">
           <MdiLogo class="text-xl sm:text-2xl text-white" />
-          <p class="ml-2 text-sm sm:text-lg text-white font-bold">{{ config.app_title }}</p>
+          <p class="ml-2 text-sm sm:text-lg text-white font-bold">{{ config.title }}</p>
         </div>
 
         <!-- Main Toolbar -->
