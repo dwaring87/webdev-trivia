@@ -1,37 +1,43 @@
 <script setup>
+  import MdiLogin from '~icons/mdi/login';
+  import MdiRegister from '~icons/mdi/account-plus';
+  import MdiAccount from '~icons/mdi/account-circle';
   import MdiNewGame from '~icons/mdi/table-large-plus';
   import MdiPlus from '~icons/mdi/plus';
-  import MdiTeam from '~icons/mdi/account-multiple-plus';
 
+  const { isLoggedIn } = useFirebase();
   const { date, host } = useGame();
   const showGameDialog = ref(false);
-  const showTeamDialog = ref(false);
+  const showLoginDialog = ref(false);
+  const showRegisterDialog = ref(false);
 </script>
 
 <template>
   <div class="container">
 
-    <!-- GAME CREATED: Show Table -->
-    <div v-if="date && date !== '' && date !== 'undefined' && host && host !== '' && host !== 'undefined'">
-
-      <!-- Game Info / Add Team -->
-      <div class="text-left sm:flex sm:items-center mt-4">
-        <div class="sm:flex-auto">
-          <h1 class="text-base font-semibold leading-6 text-gray-900">Trivia Game: {{ date }}</h1>
-          <p class="text-sm text-gray-700">Hosted By: {{ host }}</p>
-        </div>
-        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <button @click="showTeamDialog = true" type="button" class="btn btn-green">
-            <MdiTeam class="mr-2" aria-hidden="true" />
-            Add Team
-          </button>
-        </div>
-        <DialogAddTeam :open="showTeamDialog" @close="showTeamDialog = false" />
+    <!-- NOT LOGGED IN: Show login/register -->
+    <div v-if="!isLoggedIn()" class="text-center p-8">
+      <MdiAccount class="inline text-2xl" />
+      <h3 class="mt-2 text-sm font-semibold text-gray-900">Login / Register</h3>
+      <p class="mt-1 text-sm text-gray-500">You'll need to login to create a new game.</p>
+      <div class="mt-6 flex justify-center gap-x-4">
+        <button @click="showLoginDialog = true" type="button" class="btn btn-amber">
+          <MdiLogin class="mr-2" aria-hidden="true" />
+          Login
+        </button>
+        <button @click="showRegisterDialog = true" type="button" class="btn btn-green">
+          <MdiRegister class="mr-2" aria-hidden="true" />
+          Register
+        </button>
       </div>
+      <DialogLogin :open="showLoginDialog" @close="showLoginDialog = false" />
+      <DialogRegister :open="showRegisterDialog" @close="showRegisterDialog = false" />
+    </div>
 
-      <!-- Score Table -->
+    <!-- GAME CREATED: Show Table -->
+    <div v-else-if="date && date !== '' && date !== 'undefined' && host && host !== '' && host !== 'undefined'">
+      <ScoresHeader :date="date" :host="host" />
       <ScoresTable />
-
     </div>
 
     <!-- NO GAME CREATED: Show Create Game Button -->

@@ -12,7 +12,7 @@ export default () => {
 
 
   const isLoggedIn = () => {
-    return true;
+    return false;
   }
 
   return { isLoggedIn }

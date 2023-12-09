@@ -1,78 +1,78 @@
 <script setup>
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import MdiMenu from '~icons/mdi/menu';
-import MdiClose from '~icons/mdi/close-thick';
-import MdiMore from '~icons/mdi/dots-vertical';
-import MdiLogo from '~icons/fluent/chat-bubbles-question-16-filled';
+  import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
+  import MdiMenu from '~icons/mdi/menu';
+  import MdiClose from '~icons/mdi/close-thick';
+  import MdiMore from '~icons/mdi/dots-vertical';
+  import MdiLogo from '~icons/fluent/chat-bubbles-question-16-filled';
 
-import MdiCurrentGame from '~icons/mdi/table-large';
-import MdiPastGames from '~icons/mdi/history';
-import MdiLogin from '~icons/mdi/login';
-import MdiRegister from '~icons/mdi/account-plus';
-import MdiNewGame from '~icons/mdi/table-large-plus';
-import MdiDeleteGame from '~icons/mdi/delete';
-import MdiClearScores from '~icons/mdi/eraser';
+  import MdiCurrentGame from '~icons/mdi/table-large';
+  import MdiPastGames from '~icons/mdi/history';
+  import MdiLogin from '~icons/mdi/login';
+  import MdiRegister from '~icons/mdi/account-plus';
+  import MdiNewGame from '~icons/mdi/table-large-plus';
+  import MdiDeleteGame from '~icons/mdi/delete';
+  import MdiClearScores from '~icons/mdi/eraser';
 
-const { public:config } = useRuntimeConfig();
-const { isLoggedIn } = useFirebase();
-const route = useRoute();
+  const { public:config } = useRuntimeConfig();
+  const { isLoggedIn } = useFirebase();
+  const route = useRoute();
 
-const showCreateDialog = ref(false);
-const showDeleteDialog = ref(false);
-const showClearDialog = ref(false);
-const showLoginDialog = ref(false);
-const showRegisterDialog = ref(false);
-
-
-// ==== LINK DEFINITIONS ==== //
-
-// Pages within the app
-const PAGE_CURRENT_GAME = { label: 'Current Game', class: 'btn-white', icon: MdiCurrentGame, click: () => navigateTo('/') };
-const PAGE_PAST_GAMES = { label: 'Past Games', class: 'btn-white', icon: MdiPastGames, click: () => navigateTo('/history') };
-
-// Login functions, displayed when not logged in
-const USER_LOGIN = { label: 'Login', class: 'btn-amber', icon: MdiLogin, click: () => showLoginDialog.value = true };
-const USER_REGISTER = { label: 'Register', class: 'btn-green', icon: MdiRegister, click: () => showRegisterDialog.value = true };
-
-// Game functions
-const GAME_NEW = { label: 'New Game', class: 'btn-green', icon: MdiNewGame, click: () => showCreateDialog.value = true };
-const GAME_CLEAR = { label: 'Clear Scores', class: 'btn-amber', icon: MdiClearScores, click: () => showClearDialog.value = true };
-const GAME_DELETE = { label: 'Delete Game', class: 'btn-red', icon: MdiDeleteGame, click: () => showDeleteDialog.value = true };
+  const showCreateDialog = ref(false);
+  const showDeleteDialog = ref(false);
+  const showClearDialog = ref(false);
+  const showLoginDialog = ref(false);
+  const showRegisterDialog = ref(false);
 
 
-// ==== LINKS BY AREA ==== //
+  // ==== LINK DEFINITIONS ==== //
 
-// Links of the main toolbar
-const toolbar_main = computed(() => {
-  const rtn = [];
-  if ( !isLoggedIn() ) {
-    rtn.push(USER_LOGIN);
-    rtn.push(USER_REGISTER);
-  }
-  else {
-    rtn.push(GAME_NEW);
-  }
-  return rtn;
-});
+  // Pages within the app
+  const PAGE_CURRENT_GAME = { label: 'Current Game', class: 'btn-white', icon: MdiCurrentGame, click: () => navigateTo('/') };
+  const PAGE_PAST_GAMES = { label: 'Past Games', class: 'btn-white', icon: MdiPastGames, click: () => navigateTo('/history') };
 
-// Links in the toolbar more menu
-const toolbar_more = computed(() => {
-  const rtn = [];
+  // Login functions, displayed when not logged in
+  const USER_LOGIN = { label: 'Login', class: 'btn-amber', icon: MdiLogin, click: () => showLoginDialog.value = true };
+  const USER_REGISTER = { label: 'Register', class: 'btn-green', icon: MdiRegister, click: () => showRegisterDialog.value = true };
 
-  if ( isLoggedIn() && route.path === '/' ) {
-    rtn.push(GAME_CLEAR);
-    rtn.push(GAME_DELETE);
-  }
+  // Game functions
+  const GAME_NEW = { label: 'New Game', class: 'btn-green', icon: MdiNewGame, click: () => showCreateDialog.value = true };
+  const GAME_CLEAR = { label: 'Clear Scores', class: 'btn-amber', icon: MdiClearScores, click: () => showClearDialog.value = true };
+  const GAME_DELETE = { label: 'Delete Game', class: 'btn-red', icon: MdiDeleteGame, click: () => showDeleteDialog.value = true };
 
-  if ( route.path === '/' ) {
-    rtn.push(PAGE_PAST_GAMES);
-  }
-  else if ( route.path === '/history' ) {
-    rtn.push(PAGE_CURRENT_GAME);
-  }
 
-  return rtn;
-});
+  // ==== LINKS BY AREA ==== //
+
+  // Links of the main toolbar
+  const toolbar_main = computed(() => {
+    const rtn = [];
+    if ( !isLoggedIn() ) {
+      rtn.push(USER_LOGIN);
+      rtn.push(USER_REGISTER);
+    }
+    else {
+      rtn.push(GAME_NEW);
+    }
+    return rtn;
+  });
+
+  // Links in the toolbar more menu
+  const toolbar_more = computed(() => {
+    const rtn = [];
+
+    if ( isLoggedIn() && route.path === '/' ) {
+      rtn.push(GAME_CLEAR);
+      rtn.push(GAME_DELETE);
+    }
+
+    if ( route.path === '/' ) {
+      rtn.push(PAGE_PAST_GAMES);
+    }
+    else if ( route.path === '/history' ) {
+      rtn.push(PAGE_CURRENT_GAME);
+    }
+
+    return rtn;
+  });
 
 </script>
 
@@ -152,6 +152,8 @@ const toolbar_more = computed(() => {
         </div>
       </DisclosurePanel>
     </Disclosure>
+    <DialogLogin :open="showLoginDialog" @close="showLoginDialog = false" />
+    <DialogRegister :open="showRegisterDialog" @close="showRegisterDialog = false" />
     <DialogCreateGame :open="showCreateDialog" @close="showCreateDialog = false" />
     <DialogDeleteGame :open="showDeleteDialog" @close="showDeleteDialog = false" />
     <DialogClearScores :open="showClearDialog" @close="showClearDialog = false" />
