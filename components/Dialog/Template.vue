@@ -80,7 +80,7 @@
                 <button type="button" :class="`btn btn-${color} mb-2`" @click="submit" :disabled="working">
                   {{ submitLabel }}
                 </button>
-                <button type="button" class="btn mb-2" @click="close" :disabled="working">
+                <button type="button" class="btn mb-2" @click="close">
                   Cancel
                 </button>
               </div>
