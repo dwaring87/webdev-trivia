@@ -8,6 +8,7 @@
   import MdiCurrentGame from '~icons/mdi/table-large';
   import MdiPastGames from '~icons/mdi/history';
   import MdiLogin from '~icons/mdi/login';
+  import MdiLogout from '~icons/mdi/logout';
   import MdiRegister from '~icons/mdi/account-plus';
   import MdiNewGame from '~icons/mdi/table-large-plus';
   import MdiDeleteGame from '~icons/mdi/delete';
@@ -22,17 +23,19 @@
   const showClearDialog = ref(false);
   const showLoginDialog = ref(false);
   const showRegisterDialog = ref(false);
+  const showLogoutDialog = ref(false);
 
 
   // ==== LINK DEFINITIONS ==== //
 
   // Pages within the app
-  const PAGE_CURRENT_GAME = { label: 'Current Game', class: 'btn-white', icon: MdiCurrentGame, click: () => navigateTo('/') };
-  const PAGE_PAST_GAMES = { label: 'Past Games', class: 'btn-white', icon: MdiPastGames, click: () => navigateTo('/history') };
+  const PAGE_CURRENT_GAME = { label: 'Current Game', class: 'btn-blue', icon: MdiCurrentGame, click: () => navigateTo('/') };
+  const PAGE_PAST_GAMES = { label: 'Past Games', class: 'btn-blue', icon: MdiPastGames, click: () => navigateTo('/history') };
 
   // Login functions, displayed when not logged in
   const USER_LOGIN = { label: 'Login', class: 'btn-amber', icon: MdiLogin, click: () => showLoginDialog.value = true };
   const USER_REGISTER = { label: 'Register', class: 'btn-green', icon: MdiRegister, click: () => showRegisterDialog.value = true };
+  const USER_LOGOUT = { label: 'Logout', class: 'btn-amber', icon: MdiLogout, click: () => showLogoutDialog.value = true };
 
   // Game functions
   const GAME_NEW = { label: 'New Game', class: 'btn-green', icon: MdiNewGame, click: () => showCreateDialog.value = true };
@@ -71,9 +74,12 @@
       rtn.push(PAGE_CURRENT_GAME);
     }
 
+    if ( isLoggedIn() ) {
+      rtn.push(USER_LOGOUT);
+    }
+
     return rtn;
   });
-
 </script>
 
 <template>
@@ -154,6 +160,7 @@
     </Disclosure>
     <DialogLogin :open="showLoginDialog" @close="showLoginDialog = false" />
     <DialogRegister :open="showRegisterDialog" @close="showRegisterDialog = false" />
+    <DialogLogout :open="showLogoutDialog" @close="showLogoutDialog = false" />
     <DialogCreateGame :open="showCreateDialog" @close="showCreateDialog = false" />
     <DialogDeleteGame :open="showDeleteDialog" @close="showDeleteDialog = false" />
     <DialogClearScores :open="showClearDialog" @close="showClearDialog = false" />

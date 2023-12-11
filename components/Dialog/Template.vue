@@ -99,4 +99,7 @@
   .icon-red {
     @apply bg-rose-800/10 text-rose-800;
   }
+  .icon-blue {
+    @apply bg-sky-800/10 text-sky-800;
+  }
 </style>
