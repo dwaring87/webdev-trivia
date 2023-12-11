@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { 
+import {
   getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
   updateProfile, signInWithEmailAndPassword, signOut
 } from "firebase/auth";
@@ -11,13 +11,15 @@ export default () => {
 
   // === AUTH / USER FUNCTIONS ==== //
 
-  const user = ref(auth.currentUser?.toJSON());
+  const email = ref(auth.currentUser?.email);
+  const displayName = ref(auth.currentUser?.displayName);
   onAuthStateChanged(auth, (_user) => {
-    user.value = _user ? _user.toJSON() : undefined;
+    email.value = _user?.email;
+    displayName.value = _user?.displayName;
   });
 
   const isLoggedIn = () => {
-    return !!user.value;
+    return !!email.value;
   }
 
   const register = async (name, email, password) => {
@@ -43,9 +45,7 @@ export default () => {
 
   const logout = async () => {
     try {
-      if ( auth.currentUser ) {
-        await signOut(auth);
-      }
+      await signOut(auth);
       return {};
     }
     catch (error) {
@@ -54,6 +54,6 @@ export default () => {
   }
 
   return {
-    user, isLoggedIn, register, login, logout
+    email, displayName, isLoggedIn, register, login, logout
   }
 }

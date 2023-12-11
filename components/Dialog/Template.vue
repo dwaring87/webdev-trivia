@@ -6,6 +6,10 @@
       type: Boolean,
       default: false
     },
+    working: {
+      type: Boolean,
+      default: false
+    },
     color: {
       type: String,
       default: 'green'
@@ -73,10 +77,10 @@
 
               <!-- Dialog Footer -->
               <div class="mt-5 sm:mt-8 sm:flex sm:flex-row-reverse sm:gap-x-4">
-                <button type="button" :class="`btn btn-${color} mb-2`" @click="submit">
+                <button type="button" :class="`btn btn-${color} mb-2`" @click="submit" :disabled="working">
                   {{ submitLabel }}
                 </button>
-                <button type="button" class="btn mb-2" @click="close">
+                <button type="button" class="btn mb-2" @click="close" :disabled="working">
                   Cancel
                 </button>
               </div>

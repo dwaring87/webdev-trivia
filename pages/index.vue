@@ -5,7 +5,7 @@
   import MdiNewGame from '~icons/mdi/table-large-plus';
   import MdiPlus from '~icons/mdi/plus';
 
-  const { isLoggedIn } = useFirebase();
+  const { isLoggedIn, email, displayName } = useFirebase();
   const { date, host } = useGame();
   const showGameDialog = ref(false);
   const showLoginDialog = ref(false);
@@ -30,8 +30,6 @@
           Register
         </button>
       </div>
-      <DialogLogin :open="showLoginDialog" @close="showLoginDialog = false" />
-      <DialogRegister :open="showRegisterDialog" @close="showRegisterDialog = false" />
     </div>
 
     <!-- GAME CREATED: Show Table -->
@@ -51,8 +49,10 @@
           New Game
         </button>
       </div>
-      <DialogCreateGame :open="showGameDialog" @close="showGameDialog = false" />
     </div>
 
+    <DialogLogin :open="showLoginDialog" @close="showLoginDialog = false" />
+    <DialogRegister :open="showRegisterDialog" @close="showRegisterDialog = false" />
+    <DialogCreateGame :open="showGameDialog" @close="showGameDialog = false" />
   </div>
 </template>

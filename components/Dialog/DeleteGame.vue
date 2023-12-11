@@ -10,8 +10,7 @@
   const emit = defineEmits(['close']);
 
   const { clearGame } = useGame();
-
-  const clear = () => {
+  const submit = () => {
     clearGame();
     close();
   }
@@ -21,7 +20,7 @@
 </script>
 
 <template>
-  <DialogTemplate :open="open" color="red" submitLabel="Delete Game" @close="close" @submit="clear">
+  <DialogTemplate :open="open" color="red" submitLabel="Delete Game" @close="close" @submit="submit">
     <template #icon><MdiDelete /></template>
     <template #title>Delete Game?</template>
     <template #description>

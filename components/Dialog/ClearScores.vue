@@ -10,8 +10,7 @@
   const emit = defineEmits(['close']);
 
   const { clearScores } = useGame();
-
-  const clear = () => {
+  const submit = () => {
     clearScores();
     close();
   }
@@ -21,7 +20,7 @@
 </script>
 
 <template>
-  <DialogTemplate :open="open" color="amber" submitLabel="Clear Scores" @close="close" @submit="clear">
+  <DialogTemplate :open="open" color="amber" submitLabel="Clear Scores" @close="close" @submit="submit">
     <template #icon><MdiClear /></template>
     <template #title>Clear Scores?</template>
     <template #description>Are you sure you want to <strong>delete all of the scores</strong> from the current game?</template>

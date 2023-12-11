@@ -16,9 +16,11 @@
   const email_required = ref(false);
   const password_required = ref(false);
   const error_message = ref();
+  const working = ref(false);
 
   const { login } = useFirebase();
-  const _login = async () => {
+  const submit = async () => {
+    working.value = true;
     error_message.value = undefined;
     email_required.value = !email.value || email.value === '';
     password_required.value = !password.value || password.value === '';
@@ -29,17 +31,21 @@
         error_message.value = (error || "Could not login").replace("Firebase: ", "");
       }
       else {
-        _close_login();
+        close();
       }
     }
+    working.value = false;
   }
-  const _close_login = () => {
+  const close = () => {
+    email.value = undefined;
+    password.value = undefined;
+    error_message.value = undefined;
     emit('close');
   }
 </script>
 
 <template>
-  <DialogTemplate :open="open" color="amber" submitLabel="Login" @close="_close_login" @submit="_login">
+  <DialogTemplate :open="open" :working="working" color="amber" submitLabel="Login" @close="close" @submit="submit">
     <template #icon><MdiLogin /></template>
     <template #title>Login</template>
     <template #description>Enter your email address and password to login to your existing account.</template>
@@ -64,7 +70,7 @@
         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <MdiPassword class="h-5 w-5 text-gray-400" aria-hidden="true" />
         </div>
-        <input v-model="password" v-on:keyup.enter="_login()"
+        <input v-model="password" v-on:keyup.enter="submit()"
           type="password" name="password" id="password" class="input" placeholder="Your Strong Password" />
       </div>
       <p v-if="password_required && (!password || password === '')" class="required">Your password is required!</p>

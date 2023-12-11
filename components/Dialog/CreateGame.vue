@@ -12,18 +12,18 @@
   });
   const emit = defineEmits(['close']);
 
-  const { user } = useFirebase();
-  const { createGame } = useGame();
-  const date = ref(new Date().toISOString().split('T')[0]);
+  const { isLoggedIn, email, displayName } = useFirebase();
+  const date = ref();
   const host = ref();
+  const owner = ref();
   const host_ref = ref();
   const date_required = ref(false);
   const host_required = ref(false);
 
-  const create = () => {
+  const { createGame } = useGame();
+  const submit = () => {
     host_required.value = !host.value || host.value === '';
     date_required.value = !date.value || date.value === '';
-
     if ( !host_required.value && !date_required.value ) {
       createGame(date.value, host.value);
       close();
@@ -38,18 +38,16 @@
     if ( v ) {
       nextTick(() => {
         date.value = new Date().toISOString().split('T')[0];
+        host.value = displayName.value;
+        owner.value = displayName.value ? `${displayName.value} <${email.value}>` : email.value;
         host_ref.value.focus();
       });
     }
   });
-
-  watch(user, (v) => {
-    host.value = v?.displayName;
-  }, { deep: true });
 </script>
 
 <template>
-  <DialogTemplate :open="open" color="green" submitLabel="Create Game" @close="close" @submit="create">
+  <DialogTemplate :open="open" color="green" submitLabel="Create Game" @close="close" @submit="submit">
     <template #icon><MdiTable /></template>
     <template #title>Create New Game</template>
     <template #description>
@@ -57,7 +55,7 @@
     </template>
 
 
-    <div v-if="user">
+    <div v-if="isLoggedIn()">
 
       <!-- Date -->
       <div class="mt-4">
@@ -78,7 +76,7 @@
           <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             <MdiHost class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </div>
-          <input v-model="host" ref="host_ref" v-on:keyup.enter="create()"
+          <input v-model="host" ref="host_ref" v-on:keyup.enter="submit()"
             type="text" name="host" id="host" class="input" placeholder="Name of Host" />
         </div>
         <p v-if="host_required && (!host || host === '')" class="required">Host name is required!</p>
@@ -91,10 +89,14 @@
           <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             <MdiAccount class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </div>
-          <input class="input" :value="`${user.displayName} <${user.email}>`" disabled />
+          <input v-model="owner" type="text" name="owner" id="owner" class="input" disabled />
         </div>
       </div>
 
+    </div>
+
+    <div v-else>
+      <p>You must <strong>login</strong> to create a game</p>
     </div>
 
   </DialogTemplate>

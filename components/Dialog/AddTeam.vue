@@ -11,7 +11,6 @@
   });
   const emit = defineEmits(['close']);
 
-  const { scores, nextEntry, addTeam } = useGame();
   const entry = ref();
   const name = ref();
   const name_ref = ref();
@@ -19,7 +18,8 @@
   const name_required = ref(false);
   const name_exists = ref(false);
 
-  const add = () => {
+  const { scores, nextEntry, addTeam } = useGame();
+  const submit = () => {
     entry_required.value = !entry.value || entry.value === '';
     name_required.value = !name.value || name.value === '';
     name_exists.value = Object.keys(scores.value).includes(name.value);
@@ -31,6 +31,7 @@
     }
   }
   const close = () => {
+    name.value = undefined;
     emit('close');
   }
 
@@ -47,7 +48,7 @@
 </script>
 
 <template>
-  <DialogTemplate :open="open" color="green" submitLabel="Add Team" @close="close" @submit="add">
+  <DialogTemplate :open="open" color="green" submitLabel="Add Team" @close="close" @submit="submit">
     <template #icon><MdiTeam /></template>
     <template #title>Add Team</template>
     <template #description>Enter the name of the team to add to the game.</template>
@@ -71,7 +72,7 @@
         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <MdiName class="h-5 w-5 text-gray-400" aria-hidden="true" />
         </div>
-        <input v-model="name" ref="name_ref" v-on:keyup.enter="add()"
+        <input v-model="name" ref="name_ref" v-on:keyup.enter="submit()"
           type="text" name="name" id="name" class="input" placeholder="Name of Team" />
       </div>
       <p v-if="name_required && (!name || name === '')" class="required">Team name is required!</p>

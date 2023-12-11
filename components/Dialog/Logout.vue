@@ -10,22 +10,22 @@
   const emit = defineEmits(['close']);
 
   const error_message = ref();
-  const { logout, user } = useFirebase();
-  const _logout = () => {
-    _close_logout();
+  const { logout, email } = useFirebase();
+  const submit = () => {
     logout();
+    close();
   }
-  const _close_logout = () => {
+  const close = () => {
     emit('close');
   }
 </script>
 
 <template>
-  <DialogTemplate :open="open" color="amber" submitLabel="Logout" @close="_close_logout" @submit="_logout">
+  <DialogTemplate :open="open" color="amber" submitLabel="Logout" @close="close" @submit="submit">
     <template #icon><MdiLogout /></template>
     <template #title>Logout?</template>
     <template #description>
-      Are you sure you want to logout<span v-if="!!user"> of the account <strong>{{ user.email }}</strong></span>?
+      Are you sure you want to logout<span v-if="!!email"> of the account <strong>{{ email }}</strong></span>?
     </template>
     <div v-if="error_message" class="error mt-6">
       <p>{{ error_message }}</p>

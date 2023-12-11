@@ -19,9 +19,11 @@
   const email_required = ref(false);
   const password_required = ref(false);
   const error_message = ref();
+  const working = ref(false);
 
   const { register } = useFirebase();
-  const _register = async () => {
+  const submit = async () => {
+    working.value = true;
     error_message.value = undefined;
     name_required.value = !name.value || name.value === '';
     email_required.value = !email.value || email.value === '';
@@ -33,17 +35,22 @@
         error_message.value = (error || "Could not register new account").replace("Firebase: ", "");
       }
       else {
-        _close_register();
+        close();
       }
     }
+    working.value = false;
   }
-  const _close_register = () => {
+  const close = () => {
+    name.value = undefined;
+    email.value = undefined;
+    password.value = undefined;
+    error_message.value = undefined;
     emit('close');
   }
 </script>
 
 <template>
-  <DialogTemplate :open="open" color="green" submitLabel="Register" @close="_close_register" @submit="_register">
+  <DialogTemplate :open="open" :working="working" color="green" submitLabel="Register" @close="close" @submit="submit">
     <template #icon><MdiRegister /></template>
     <template #title>Register Account</template>
     <template #description>Enter your name, email address, and password to create a new account.</template>
@@ -55,7 +62,7 @@
         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <MdiName class="h-5 w-5 text-gray-400" aria-hidden="true" />
         </div>
-        <input v-model="name" v-on:keyup.enter="_register()"
+        <input v-model="name" v-on:keyup.enter="submit()"
           type="text" name="name" id="name" class="input" placeholder="Your Name" />
       </div>
       <p v-if="name_required && (!name || name === '')" class="required">Your name is required!</p>
@@ -68,7 +75,7 @@
         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <MdiEmail class="h-5 w-5 text-gray-400" aria-hidden="true" />
         </div>
-        <input v-model="email" v-on:keyup.enter="_register()"
+        <input v-model="email" v-on:keyup.enter="submit()"
           type="email" name="email" id="email" class="input" placeholder="Your Email Address" />
       </div>
       <p v-if="email_required && (!email || email === '')" class="required">Your email address is required!</p>
@@ -81,7 +88,7 @@
         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <MdiPassword class="h-5 w-5 text-gray-400" aria-hidden="true" />
         </div>
-        <input v-model="password" v-on:keyup.enter="_register()"
+        <input v-model="password" v-on:keyup.enter="submit()"
           type="password" name="password" id="password" class="input" placeholder="Your Strong Password" />
       </div>
       <p v-if="password_required && (!password || password === '')" class="required">A password is required!</p>

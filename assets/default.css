@@ -35,6 +35,9 @@ h4 {
 .btn {
   @apply inline-flex w-full justify-center rounded-md bg-white hover:bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm sm:mt-0 sm:w-auto border border-gray-800/20 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-amber-700;
 }
+.btn:disabled {
+  @apply opacity-50;
+}
 .btn-small {
   @apply p-1;
 }

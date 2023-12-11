@@ -11,8 +11,7 @@
   const emit = defineEmits(['close']);
 
   const { removeTeam } = useGame();
-
-  const remove = () => {
+  const submit = () => {
     removeTeam(props.team);
     close();
   }
@@ -22,7 +21,7 @@
 </script>
 
 <template>
-  <DialogTemplate :open="open" color="red" submitLabel="Delete Team" @close="close" @submit="remove">
+  <DialogTemplate :open="open" color="red" submitLabel="Delete Team" @close="close" @submit="submit">
     <template #icon><MdiDelete /></template>
     <template #title>Delete Team?</template>
     <template #description>
