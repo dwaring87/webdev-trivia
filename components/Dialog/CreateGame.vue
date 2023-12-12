@@ -12,7 +12,7 @@
   });
   const emit = defineEmits(['close']);
 
-  const { isLoggedIn, email, displayName } = useFirebase();
+  const { isLoggedIn, email, displayName } = useAuth();
   const date = ref();
   const host = ref();
   const owner = ref();
@@ -20,7 +20,7 @@
   const date_required = ref(false);
   const host_required = ref(false);
 
-  const { createGame } = useGame();
+  const { createGame } = useDatabase();
   const submit = () => {
     host_required.value = !host.value || host.value === '';
     date_required.value = !date.value || date.value === '';

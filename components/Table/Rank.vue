@@ -3,9 +3,9 @@
     team: String
   });
 
-  const { scores } = useGame();
+  const { teamScores } = useDatabase();
   const rank = computed(() => {
-    const r = scores.value[props.team].rank;
+    const r = teamScores(props.team).rank;
     return !!r ? r : '&mdash;';
   })
 </script>

@@ -21,7 +21,7 @@
   const error_message = ref();
   const working = ref(false);
 
-  const { register } = useFirebase();
+  const { register } = useAuth();
   const submit = async () => {
     working.value = true;
     error_message.value = undefined;

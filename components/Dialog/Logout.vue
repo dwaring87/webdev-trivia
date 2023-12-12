@@ -10,7 +10,7 @@
   const emit = defineEmits(['close']);
 
   const error_message = ref();
-  const { logout, email } = useFirebase();
+  const { logout, email } = useAuth();
   const submit = () => {
     logout();
     close();

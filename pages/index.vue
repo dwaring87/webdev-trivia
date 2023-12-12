@@ -5,8 +5,8 @@
   import MdiNewGame from '~icons/mdi/table-large-plus';
   import MdiPlus from '~icons/mdi/plus';
 
-  const { isLoggedIn, displayName } = useFirebase();
-  const { date, host } = useGame();
+  const { isLoggedIn, displayName } = useAuth();
+  const { hasGame, date, host } = useDatabase();
   const showGameDialog = ref(false);
   const showLoginDialog = ref(false);
   const showRegisterDialog = ref(false);
@@ -37,7 +37,7 @@
     </div>
 
     <!-- GAME CREATED: Show Table -->
-    <div v-else-if="date && date !== '' && date !== 'undefined' && host && host !== '' && host !== 'undefined'">
+    <div v-else-if="hasGame">
       <ScoresHeader :date="date" :host="host" />
       <ScoresTable />
     </div>

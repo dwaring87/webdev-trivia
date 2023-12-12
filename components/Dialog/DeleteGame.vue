@@ -9,7 +9,7 @@
   });
   const emit = defineEmits(['close']);
 
-  const { clearGame } = useGame();
+  const { clearGame } = useDatabase();
   const submit = () => {
     clearGame();
     close();

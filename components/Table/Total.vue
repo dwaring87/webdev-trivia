@@ -3,9 +3,9 @@
     team: String
   });
 
-  const { scores } = useGame();
+  const { teamScores } = useDatabase();
   const total = computed(() => {
-    const t = scores.value[props.team].total;
+    const t = teamScores(props.team).total;
     return !!t ? t : '&mdash;';
   })
 </script>

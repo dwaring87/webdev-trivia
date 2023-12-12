@@ -5,12 +5,11 @@ import {
   GoogleAuthProvider, signInWithRedirect, getRedirectResult
 } from "firebase/auth";
 
-export default () => {
-  const { public:config } = useRuntimeConfig();
-  const app = initializeApp(config.firebase);
-  const auth = getAuth(app);
+const { public:config } = useRuntimeConfig();
+const app = initializeApp(config.firebase);
+const auth = getAuth(app);
 
-  // === AUTH / USER FUNCTIONS ==== //
+export default () => {
 
   // Catch login redirect results and errors
   getRedirectResult(auth).then((result) => {
@@ -70,6 +69,7 @@ export default () => {
     try {
       const provider = new GoogleAuthProvider();
       signInWithRedirect(auth, provider);
+      return { };
     }
     catch (error) {
       return { error: error.message };

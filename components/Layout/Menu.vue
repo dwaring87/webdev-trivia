@@ -15,7 +15,7 @@
   import MdiClearScores from '~icons/mdi/eraser';
 
   const { public:config } = useRuntimeConfig();
-  const { isLoggedIn } = useFirebase();
+  const { isLoggedIn } = useAuth();
   const route = useRoute();
 
   const showCreateDialog = ref(false);

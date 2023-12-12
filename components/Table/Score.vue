@@ -7,7 +7,7 @@
   });
   const emit = defineEmits(['save']);
 
-  const { getScore, setScore } = useGame();
+  const { getScore, setScore } = useDatabase();
   const score = computed({
     get: () => {
       return getScore(props.team, props.round);

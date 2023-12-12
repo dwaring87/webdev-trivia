@@ -18,11 +18,11 @@
   const name_required = ref(false);
   const name_exists = ref(false);
 
-  const { scores, nextEntry, addTeam } = useGame();
+  const { addTeam, teams, nextEntry } = useDatabase();
   const submit = () => {
     entry_required.value = !entry.value || entry.value === '';
     name_required.value = !name.value || name.value === '';
-    name_exists.value = Object.keys(scores.value).includes(name.value);
+    name_exists.value = teams.value.includes(name.value);
 
     if ( !entry_required.value && !name_required.value && !name_exists.value ) {
       addTeam(entry.value, name.value);
@@ -38,7 +38,7 @@
   watch(() => props.open, (v) => {
     if ( v ) {
       nextTick(() => {
-        entry.value = nextEntry();
+        entry.value = nextEntry.value;
         name_exists.value = false;
         name_required.value = false;
         name_ref.value.focus();

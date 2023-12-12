@@ -1,17 +1,18 @@
 <script setup>
-  const { teams } = useGame();
+  const { teams, setTeamSort } = useDatabase();
 
   const sort = ref("entry");
   const descending = ref(false);
   const toggleSort = (key) => {
     descending.value = key === sort.value ? !descending.value : descending.value;
     sort.value = key;
+    setTeamSort(sort.value, descending.value);
   }
 
-  let _sorted_teams = [];
+  let _sorted_teams = teams;
   const sortedTeams = computed(() => {
     if ( !editRound.value ) {
-      _sorted_teams = teams(sort.value, descending.value);
+      _sorted_teams = teams.value;
     }
     return _sorted_teams;
   });
