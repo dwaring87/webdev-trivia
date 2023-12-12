@@ -10,7 +10,7 @@
   });
   const emit = defineEmits(['close']);
 
-  const { removeTeam } = useGame();
+  const { removeTeam } = useDatabase();
   const submit = () => {
     removeTeam(props.team);
     close();

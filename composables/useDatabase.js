@@ -49,6 +49,14 @@ export default () => {
     }
   }
 
+  const clearScores = () => {
+    teams.value.forEach((team) => {
+      for ( let round = 1; round <= 5; round ++ ) {
+        setScore(team, round);
+      }
+    });
+  }
+
   const addTeam = (e, n) => {
     if ( currentGameKey.value ) {
       const team_key = md5(n);
@@ -67,6 +75,13 @@ export default () => {
           rank: false
         }
       );
+    }
+  }
+
+  const removeTeam = (n) => {
+    if ( currentGameKey.value ) {
+      const team_key = md5(n);
+      remove(dbRef(database, `games/${currentGameKey.value}/scores/${team_key}`));
     }
   }
 
@@ -109,7 +124,7 @@ export default () => {
     return scores.value[key][`round${round}`];
   }
 
-  const setScore = (team, round, score) => {
+  const setScore = (team, round, score=false) => {
     const key = md5(team);
     scores.value[key][`round${round}`] = score;
     set(dbRef(database, `games/${currentGameKey.value}/scores/${key}/round${round}`), score);
@@ -144,7 +159,7 @@ export default () => {
   
   return {
     hasGame, date, host, scores, teams, nextEntry,
-    createGame, addTeam, clearGame,
+    createGame, addTeam, removeTeam, clearGame, clearScores,
     setTeamSort, teamScores, getScore, setScore
   };
 }

@@ -8,6 +8,7 @@ import {
 const { public:config } = useRuntimeConfig();
 const app = initializeApp(config.firebase);
 const auth = getAuth(app);
+const currentGameKey = useLocalStorage('current-game');
 
 export default () => {
 
@@ -46,6 +47,7 @@ export default () => {
   const login = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      currentGameKey.value = '';
       return { user: auth.currentUser };
     }
     catch (error) {
@@ -57,6 +59,7 @@ export default () => {
   const logout = async () => {
     try {
       await signOut(auth);
+      currentGameKey.value = '';
       return {};
     }
     catch (error) {

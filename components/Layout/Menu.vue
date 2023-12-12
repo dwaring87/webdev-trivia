@@ -16,6 +16,7 @@
 
   const { public:config } = useRuntimeConfig();
   const { isLoggedIn } = useAuth();
+  const { hasGame } = useDatabase();
   const route = useRoute();
 
   const showCreateDialog = ref(false);
@@ -62,7 +63,7 @@
   const toolbar_more = computed(() => {
     const rtn = [];
 
-    if ( isLoggedIn() && route.path === '/' ) {
+    if ( isLoggedIn() && hasGame.value && route.path === '/' ) {
       rtn.push(GAME_CLEAR);
       rtn.push(GAME_DELETE);
     }
