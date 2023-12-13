@@ -1,20 +1,27 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref as dbRef, set, remove, onValue, off } from "firebase/database";
+import { getDatabase, ref as dbRef, get, set, remove, onValue, off } from "firebase/database";
+import { getAuth } from "firebase/auth";
 
 const { public:config } = useRuntimeConfig();
 const app = initializeApp(config.firebase);
 const database = getDatabase(app);
+const auth = getAuth(app);
 
+// Game key for the currently loaded game (kept it local storage)
 const currentGameKey = useLocalStorage('current-game');
 const hasGame = computed(() => !!currentGameKey.value && currentGameKey.value !== '');
 
+// Game properties (vue refs used in the app)
 const date = ref();
 const host = ref();
 const scores = ref([]);
 
+// Sorting properties (updated with the setTeamSort function)
 const _sort_key = ref('entry');
 const _sort_descending = ref(false);
 
+// Game key watcher:
+// set value listeners that update the vue refs for the current game properties
 watch(currentGameKey, (n, o) => {
   if ( o ) {
     off(dbRef(database, `games/${o}/date`));
@@ -30,18 +37,28 @@ watch(currentGameKey, (n, o) => {
 
 export default () => {
  
+  // Create a new game with the specified date and host
+  // User must be logged in to create a game (set as owner)
   const createGame = (d, h) => {
-    currentGameKey.value = md5([d, h]);
-    set(
-      dbRef(database, `games/${currentGameKey.value}`),
-      {
-        date: d,
-        host: h,
-        scores: {}
-      }
-    );
+    const t = new Date().getTime();
+    const o = auth?.currentUser?.email;
+    if ( o ) {
+      currentGameKey.value = md5([d, h, t]);
+      set(
+        dbRef(database, `games/${currentGameKey.value}`),
+        {
+          key: currentGameKey.value,
+          date: d,
+          host: h,
+          created: t,
+          owner: o,
+          scores: {}
+        }
+      );
+    }
   }
 
+  // Remove the current game from the database
   const clearGame = () => {
     if ( currentGameKey.value ) {
       remove(dbRef(database, `games/${currentGameKey.value}`));
@@ -49,6 +66,7 @@ export default () => {
     }
   }
 
+  // Remove all of the teams' scores from the current game
   const clearScores = () => {
     teams.value.forEach((team) => {
       for ( let round = 1; round <= 5; round ++ ) {
@@ -57,6 +75,9 @@ export default () => {
     });
   }
 
+  // Add a new team to the current game
+  // e = entry number
+  // n = team name
   const addTeam = (e, n) => {
     if ( currentGameKey.value ) {
       const team_key = md5(n);
@@ -78,6 +99,8 @@ export default () => {
     }
   }
 
+  // Remove a team from the current game
+  // n = team name
   const removeTeam = (n) => {
     if ( currentGameKey.value ) {
       const team_key = md5(n);
@@ -85,6 +108,7 @@ export default () => {
     }
   }
 
+  // Get the next entry number for the next team to be added to the current game
   const nextEntry = computed(() => {
     let max = 0;
     for ( const key in scores.value ) {
@@ -94,11 +118,15 @@ export default () => {
     return max+1;
   });
 
+  // Set the team sort properties
+  // key = name of property to sort teams by (entry, name, rank, total, round1, etc)
+  // descending = set to true to sort by descending values
   const setTeamSort = (key='entry', descending=false) => {
     _sort_key.value = key;
     _sort_descending.value = descending;
   };
 
+  // Get an array of team names from the current game, sorted by the set sort properties
   const teams = computed(() => {
     let s = scores.value ? Object.values(scores.value) : [];
     s = s.sort((a, b) => {
@@ -114,16 +142,19 @@ export default () => {
     return rtn;
   });
 
+  // Get all of the scores for the specified team
   const teamScores = (team) => {
     const key = md5(team);
     return scores.value[key];
   }
 
+  // Get the score for the specified team and round
   const getScore = (team, round) => {
     const key = md5(team);
     return scores.value[key][`round${round}`];
   }
 
+  // Set the score for the specified team and round
   const setScore = (team, round, score=false) => {
     const key = md5(team);
     scores.value[key][`round${round}`] = score;
@@ -131,6 +162,7 @@ export default () => {
     _calc();
   }
 
+  // Update all of the totals and ranks for all of the teams in the current game
   const _calc = () => {
 
     // Calculate the team totals
@@ -156,11 +188,24 @@ export default () => {
     }
 
   }
+
+  // Get an array of all of the stored games in the database
+  const getGames = async () => {
+    const snapshot = await get(dbRef(database, `games/`));
+    const games = snapshot.exists() ? Object.values(snapshot.val()) : [];
+    games.forEach((game) => {
+      game.teams = Object.values(game.scores || {}).length;
+      game.winner = Object.values(game.scores || {}).filter((e) => e.rank === 1).map((e) => e.name).join(', ');
+    });
+    console.log(games);
+    return games;
+  };
   
   return {
     hasGame, date, host, scores, teams, nextEntry,
     createGame, addTeam, removeTeam, clearGame, clearScores,
-    setTeamSort, teamScores, getScore, setScore
+    setTeamSort, teamScores, getScore, setScore,
+    getGames
   };
 }
 
