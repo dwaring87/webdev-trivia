@@ -1,5 +1,10 @@
 <script setup>
-  const { teams, setTeamSort } = useDatabase();
+  const { owner, teams, setTeamSort } = useDatabase();
+  const { email } = useAuth();
+
+  const editable = computed(() => {
+    return owner.value && owner.value === email.value;
+  });
 
   const sort = ref("entry");
   const descending = ref(false);
@@ -20,8 +25,10 @@
   const editRound = ref();
   const editTeam = ref();
   const edit = (round, team) => {
-    editRound.value = round;
-    editTeam.value = team;
+    if ( editable.value ) {
+      editRound.value = round;
+      editTeam.value = team;
+    }
   }
   const save = () => {
     editRound.value = undefined;

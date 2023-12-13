@@ -4,9 +4,9 @@
   import MdiAccount from '~icons/mdi/account-circle';
   import MdiNewGame from '~icons/mdi/table-large-plus';
   import MdiPlus from '~icons/mdi/plus';
+  import MdiPastGames from '~icons/mdi/history';
 
   const { isLoggedIn, displayName } = useAuth();
-  const { hasGame, date, host } = useDatabase();
   const showGameDialog = ref(false);
   const showLoginDialog = ref(false);
   const showRegisterDialog = ref(false);
@@ -36,23 +36,24 @@
       </div>
     </div>
 
-    <!-- GAME CREATED: Show Table -->
-    <div v-else-if="hasGame">
-      <ScoresHeader :date="date" :host="host" />
-      <ScoresTable />
-    </div>
-
     <!-- NO GAME CREATED: Show Create Game Button -->
     <div class="text-center p-8" v-else>
       <MdiNewGame class="inline text-2xl" />
       <h3 class="mt-2 text-sm font-semibold text-gray-900">Welcome<span v-if="displayName">, {{ displayName }}</span>!</h3>
-      <p class="mt-1 text-sm text-gray-500">Get started by creating a new game!</p>
+      <p class="mt-4 text-sm text-gray-500">Get started by creating a new game!</p>
       <div class="mt-6">
         <button @click="showGameDialog = true" type="button" class="btn btn-green">
           <MdiPlus class="mr-2" aria-hidden="true" />
           New Game
         </button>
       </div>
+    </div>
+
+    <div class="text-center">
+      <button class="btn btn-blue" @click="navigateTo('/history')">
+        <MdiPastGames class="mr-2" />
+        View Past Games
+      </button>
     </div>
 
     <DialogLogin :open="showLoginDialog" @close="showLoginDialog = false" />

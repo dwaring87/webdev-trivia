@@ -47,7 +47,6 @@ export default () => {
   const login = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      currentGameKey.value = '';
       return { user: auth.currentUser };
     }
     catch (error) {
@@ -59,7 +58,6 @@ export default () => {
   const logout = async () => {
     try {
       await signOut(auth);
-      currentGameKey.value = '';
       return {};
     }
     catch (error) {

@@ -25,10 +25,8 @@
     games.value = await getGames();
   }
 
-  const currentGame = useLocalStorage('current-game');
   const loadGame = (key) => {
-    currentGame.value = key;
-    navigateTo('/');
+    navigateTo(`/game/${key}`);
   }
 </script>
 

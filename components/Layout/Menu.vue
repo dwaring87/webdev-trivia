@@ -18,6 +18,7 @@
   const { isLoggedIn } = useAuth();
   const { hasGame } = useDatabase();
   const route = useRoute();
+  const currentGame = useLocalStorage('current-game');
 
   const showCreateDialog = ref(false);
   const showDeleteDialog = ref(false);
@@ -30,7 +31,7 @@
   // ==== LINK DEFINITIONS ==== //
 
   // Pages within the app
-  const PAGE_CURRENT_GAME = { label: 'Current Game', class: 'btn-blue', icon: MdiCurrentGame, click: () => navigateTo('/') };
+  const PAGE_CURRENT_GAME = { label: 'Current Game', class: 'btn-blue', icon: MdiCurrentGame, click: () => navigateTo(`/game/${currentGame.value}`) };
   const PAGE_PAST_GAMES = { label: 'Past Games', class: 'btn-blue', icon: MdiPastGames, click: () => navigateTo('/history') };
 
   // Login functions, displayed when not logged in
@@ -63,12 +64,12 @@
   const toolbar_more = computed(() => {
     const rtn = [];
 
-    if ( isLoggedIn() && hasGame.value && route.path === '/' ) {
+    if ( isLoggedIn() && hasGame.value && route.path.startsWith('/game') ) {
       rtn.push(GAME_CLEAR);
       rtn.push(GAME_DELETE);
     }
 
-    if ( route.path === '/' ) {
+    if ( route.path === '/' || route.path.startsWith('/game') ) {
       rtn.push(PAGE_PAST_GAMES);
     }
     else if ( route.path === '/history' ) {
@@ -100,7 +101,7 @@
           </div>
 
           <!-- Logo / Name -->
-          <div class="flex sm:flex-1 items-center">
+          <div class="flex sm:flex-1 items-center cursor-pointer" @click="navigateTo('/')">
             <MdiLogo class="text-xl sm:text-2xl text-white" />
             <p class="ml-2 text-sm sm:text-lg text-white font-bold">{{ config.title }}</p>
           </div>

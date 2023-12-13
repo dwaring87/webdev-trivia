@@ -14,6 +14,7 @@ const hasGame = computed(() => !!currentGameKey.value && currentGameKey.value !=
 // Game properties (vue refs used in the app)
 const date = ref();
 const host = ref();
+const owner = ref();
 const scores = ref([]);
 
 // Sorting properties (updated with the setTeamSort function)
@@ -26,11 +27,13 @@ watch(currentGameKey, (n, o) => {
   if ( o ) {
     off(dbRef(database, `games/${o}/date`));
     off(dbRef(database, `games/${o}/host`));
+    off(dbRef(database, `games/${o}/owner`));
     off(dbRef(database, `games/${o}/scores`));
   }
   if ( n ) {
     onValue(dbRef(database, `games/${n}/date`), (s) => date.value = s.val());
     onValue(dbRef(database, `games/${n}/host`), (s) => host.value = s.val());
+    onValue(dbRef(database, `games/${n}/owner`), (s) => owner.value = s.val());
     onValue(dbRef(database, `games/${n}/scores`), (s) => scores.value = s.val());
   }
 }, { immediate: true });
@@ -55,6 +58,7 @@ export default () => {
           scores: {}
         }
       );
+      return currentGameKey.value;
     }
   }
 
@@ -202,7 +206,7 @@ export default () => {
   };
   
   return {
-    hasGame, date, host, scores, teams, nextEntry,
+    hasGame, date, host, owner, scores, teams, nextEntry,
     createGame, addTeam, removeTeam, clearGame, clearScores,
     setTeamSort, teamScores, getScore, setScore,
     getGames

@@ -6,7 +6,7 @@ h1 {
   @apply text-2xl font-extrabold text-cyan-800 md:text-3xl lg:text-4xl my-2;
 }
 h2 {
-  @apply text-xl font-bold text-cyan-800 md:text-xl lg:text-2xl my-2 border-b border-cyan-700/10;
+  @apply text-xl font-bold text-sky-800 md:text-xl lg:text-2xl my-2 border-b border-sky-700/10;
 }
 h3 {
   @apply text-lg md:text-lg lg:text-xl font-bold text-emerald-800 opacity-80;

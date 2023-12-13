@@ -25,9 +25,9 @@
     host_required.value = !host.value || host.value === '';
     date_required.value = !date.value || date.value === '';
     if ( !host_required.value && !date_required.value ) {
-      createGame(date.value, host.value);
+      const key = createGame(date.value, host.value);
       close();
-      navigateTo('/');
+      navigateTo(`/game/${key}`);
     }
   }
   const close = () => {
