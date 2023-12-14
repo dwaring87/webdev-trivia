@@ -33,8 +33,8 @@
   }
 
   // Load the specified game (by game key)
-  const loadGame = (key) => {
-    navigateTo(`/game/${key}`);
+  const loadGame = (owner, key) => {
+    navigateTo(`/game/${owner}/${key}`);
   }
 </script>
 
@@ -65,7 +65,7 @@
                       isGameEditable(game) ? 'font-semibold' : 'font-normal',
                       'hover:bg-orange-800/10 cursor-pointer'
                     ]"
-                    @click="loadGame(game.key)">
+                    @click="loadGame(game.owner, game.key)">
                   <td class="tc hidden md:table-cell"><p><MdiAccount v-if="isGameEditable(game)" class="mx-auto text-emerald-700" /></p></td>
                   <td class="tc"><p>{{ game.date }}</p></td>
                   <td class="tc">{{ game.host }}</td>

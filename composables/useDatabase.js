@@ -19,8 +19,26 @@ const owner = ref();
 const scores = ref([]);
 const editable = ref(false);
 
-// List of existing game keys
+// Get existing games
+// gameKeys = list of existing game keys (owner/game)
+// getGames = returns a (flattened) list of all games
 const gameKeys = ref([]);
+const getGames = async () => {
+  const games = [];
+  const snapshot = await get(dbRef(database, `games/`));
+  const data = snapshot.exists() ? snapshot.val() : {};
+  const users = Object.keys(data);
+  users.forEach((user) => {
+    Object.values(data[user]).forEach((game) => {
+      game.teams = Object.values(game.scores || {}).length;
+      game.winner = Object.values(game.scores || {}).filter((e) => e.rank === 1).map((e) => e.name).join(', ');
+      games.push(game);
+      gameKeys.value.push(`${game.owner}/${game.key}`);
+    })
+  });
+  return games;
+};
+getGames();
 
 // Sorting properties (updated with the setTeamSort function)
 const _sort_key = ref('entry');
@@ -53,29 +71,32 @@ export default () => {
  
   // Create a new game with the specified date and host
   // User must be logged in to create a game (set as owner)
-  const createGame = (d, h) => {
+  const createGame = async (d, h) => {
     const t = new Date().getTime();
     if ( currentUser.value ) {
-      currentGame.value = md5([d, h, t]);
+      const gameKey = md5([d, h, t]);
+      currentGame.value = `${currentUser.value}/${gameKey}`;
       set(
         dbRef(database, `games/${currentGame.value}`),
         {
-          key: currentGame.value,
+          owner: currentUser.value,
+          key: gameKey,
           date: d,
           host: h,
           created: t,
-          owner: currentUser.value,
           scores: {}
         }
       );
+      await getGames();
       return currentGame.value;
     }
   }
 
   // Remove the current game from the database
-  const clearGame = () => {
+  const clearGame = async () => {
     if ( currentGame.value ) {
       remove(dbRef(database, `games/${currentGame.value}`));
+      await getGames();
       currentGame.value = '';
     }
   }
@@ -202,21 +223,6 @@ export default () => {
     }
 
   }
-
-  // Get an array of all of the stored games in the database
-  const getGames = async () => {
-    const snapshot = await get(dbRef(database, `games/`));
-    const games = snapshot.exists() ? Object.values(snapshot.val()) : [];
-    games.forEach((game) => {
-      game.teams = Object.values(game.scores || {}).length;
-      game.winner = Object.values(game.scores || {}).filter((e) => e.rank === 1).map((e) => e.name).join(', ');
-      gameKeys.value.push(game.key);
-    });
-    return games;
-  };
-
-  // Update the games on loading the composable
-  getGames();
   
   return {
     hasGame, currentGame, date, host, owner, editable, scores, teams, nextEntry,

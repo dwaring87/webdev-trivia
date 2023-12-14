@@ -3,7 +3,7 @@
 
   const { params } = useRoute();
   const { currentGame, hasGame, date, host } = useDatabase();
-  currentGame.value = params.key;
+  currentGame.value = `${params.user}/${params.game}`;
 </script>
 
 <template>

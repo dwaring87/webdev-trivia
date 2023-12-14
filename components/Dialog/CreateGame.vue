@@ -21,11 +21,11 @@
   const host_required = ref(false);
 
   const { createGame } = useDatabase();
-  const submit = () => {
+  const submit = async () => {
     host_required.value = !host.value || host.value === '';
     date_required.value = !date.value || date.value === '';
     if ( !host_required.value && !date_required.value ) {
-      const key = createGame(date.value, host.value);
+      const key = await createGame(date.value, host.value);
       close();
       navigateTo(`/game/${key}`);
     }
