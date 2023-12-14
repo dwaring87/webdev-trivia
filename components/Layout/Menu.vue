@@ -63,7 +63,7 @@
     return rtn;
   });
 
-  // Links in the toolbar more menu
+  // Links in the toolbar more menu and mobile menu
   const toolbar_more = computed(() => {
     const rtn = [];
 

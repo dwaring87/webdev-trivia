@@ -2,10 +2,8 @@
   import MdiAlert from '~icons/mdi/alert-circle';
 
   const { params } = useRoute();
-  const { currentGame } = useDatabase();
+  const { currentGame, hasGame, date, host } = useDatabase();
   currentGame.value = params.key;
-
-  const { hasGame, date, host } = useDatabase();
 </script>
 
 <template>

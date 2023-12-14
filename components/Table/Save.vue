@@ -5,6 +5,7 @@
     editRound: Number
   });
   const emit = defineEmits(['hide']);
+
   const hide = () => {
     emit('hide');
   }

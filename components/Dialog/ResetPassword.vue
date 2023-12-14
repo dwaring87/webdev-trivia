@@ -10,13 +10,13 @@
   });
   const emit = defineEmits(['close']);
 
-  const { resetPassword } = useAuth();
   const email = ref();
   const error_message = ref();
   
+  const { resetPassword } = useAuth();
   const submit = async () => {
     if ( email.value ) {
-      const { error } = await resetPassword(email.value);
+      const error = await resetPassword(email.value);
       if ( error ) {
         error_message.value = error;
       }

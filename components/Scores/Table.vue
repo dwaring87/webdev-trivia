@@ -1,7 +1,7 @@
 <script setup>
-  const { teams, setTeamSort } = useDatabase();
-  const { editable } = useDatabase();
+  const { editable, teams, setTeamSort } = useDatabase();
 
+  // Sorting options
   const sort = ref("entry");
   const descending = ref(false);
   const toggleSort = (key) => {
@@ -10,6 +10,7 @@
     setTeamSort(sort.value, descending.value);
   }
 
+  // List of sorted teams
   let _sorted_teams = teams;
   const sortedTeams = computed(() => {
     if ( !editRound.value ) {
@@ -18,6 +19,7 @@
     return _sorted_teams;
   });
 
+  // Editing properties and save function
   const editRound = ref();
   const editTeam = ref();
   const edit = (round, team) => {

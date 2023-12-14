@@ -54,7 +54,6 @@
       Create a new game by selecting the date and naming the host.
     </template>
 
-
     <div v-if="isLoggedIn()">
 
       <!-- Date -->
@@ -98,7 +97,6 @@
     <div v-else>
       <p>You must <strong>login</strong> to create a game</p>
     </div>
-
   </DialogTemplate>
 </template>
 

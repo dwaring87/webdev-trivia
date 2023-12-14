@@ -7,7 +7,7 @@
   const total = computed(() => {
     const t = teamScores(props.team).total;
     return !!t ? t : '&mdash;';
-  })
+  });
 </script>
 
 <template>

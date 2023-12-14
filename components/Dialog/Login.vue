@@ -5,8 +5,6 @@
   import MdiGoogle from '~icons/mdi/google';
   import MdiAnonymous from '~icons/mdi/incognito';
 
-  const { public:config } = useRuntimeConfig();
-  const { login, loginWithGoogle, loginAnonymously } = useAuth();
   const props = defineProps({
     open: {
       type: Boolean,
@@ -15,6 +13,7 @@
   });
   const emit = defineEmits(['close']);
 
+  const { public:config } = useRuntimeConfig();
   const login_provider = ref();
   const email = ref();
   const password = ref();
@@ -24,11 +23,13 @@
   const error_message = ref();
   const working = ref(false);
 
+  // Perform the provider-specific login function
+  const { login, loginWithGoogle, loginAnonymously } = useAuth();
   const submit = async () => {
     error_message.value = undefined;
-    working.value = true;
     let error;
 
+    working.value = true;
     if ( login_provider.value === 'email' ) {
       error = await login_email();
     }
@@ -41,7 +42,7 @@
     working.value = false;
 
     if ( error ) {
-      error_message.value = error.replace("Firebase: ", "");
+      error_message.value = error;
     }
     else {
       close();
@@ -52,25 +53,22 @@
   const login_email = async () => {
     email_required.value = !email.value || email.value === '';
     password_required.value = !password.value || password.value === '';
-
     if ( !email_required.value && !password_required.value ) {
-      const { error, user } = await login(email.value, password.value);
-      if ( error || !user ) {
-        return error || "Could not login";
-      }
+      return await login(email.value, password.value);
+    }
+    else {
+      return "Missing login credentials";
     }
   }
 
   // Perform Google login with a redirect
   const login_google = async () => {
-    const { error } = await loginWithGoogle();
-    return error;
+    return await loginWithGoogle();
   }
 
   // Perform anonymous login
   const login_anonymous = async () => {
-    const { error } = await loginAnonymously();
-    return error;
+    return await loginAnonymously();
   }
 
   // Show the reset password dialog
@@ -146,10 +144,10 @@
             <input v-model="password" v-on:keyup.enter="submit()"
               type="password" name="password" id="password" class="input" placeholder="Your Strong Password" />
           </div>
+          <p v-if="password_required && (!password || password === '')" class="required">Your password is required!</p>
           <p class="mt-1 text-right text-xs font-bold uppercase opacity-70 hover:opacity-90 cursor-pointer" @click="resetPassword">
             Forgot Password?
           </p>
-          <p v-if="password_required && (!password || password === '')" class="required">Your password is required!</p>
         </div>
 
       </div>
@@ -175,10 +173,10 @@
         </p>
       </div>
 
+      <!-- Error Message -->
       <div v-if="error_message" class="error mt-6">
         <p>{{ error_message }}</p>
       </div>
-
     </DialogTemplate>
     <DialogResetPassword :open="showResetPasswordDialog" @close="showResetPasswordDialog = false" />
   </div>

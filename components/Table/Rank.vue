@@ -7,7 +7,7 @@
   const rank = computed(() => {
     const r = teamScores(props.team).rank;
     return !!r ? r : '&mdash;';
-  })
+  });
 </script>
 
 <template>

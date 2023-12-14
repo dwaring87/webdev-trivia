@@ -18,6 +18,7 @@ export default () => {
   });
 
   // User properties to make available to the app
+  // Update the properties when the auth state has changed
   const email = ref(auth.currentUser?.email);
   const displayName = ref(auth.currentUser?.displayName);
   const id = ref(auth.currentUser?.uid)
@@ -28,6 +29,7 @@ export default () => {
   });
 
   // Check if there is a logged in user
+  // loggedIn = when the current user id is set
   const isLoggedIn = () => {
     return !!id.value;
   }
@@ -37,10 +39,9 @@ export default () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
-      return { user: auth.currentUser }
     }
     catch (error) {
-      return { error: error.message };
+      return error.message.replace("Firebase: ", "");
     };
   }
 
@@ -48,21 +49,9 @@ export default () => {
   const login = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      return { user: auth.currentUser };
     }
     catch (error) {
-      return { error: error.message };
-    }
-  }
-
-  // Logout the currently logged in user
-  const logout = async () => {
-    try {
-      await signOut(auth);
-      return {};
-    }
-    catch (error) {
-      return { error: error.message };
+      return error.message.replace("Firebase: ", "");;
     }
   }
 
@@ -71,10 +60,9 @@ export default () => {
     try {
       const provider = new GoogleAuthProvider();
       signInWithRedirect(auth, provider);
-      return { };
     }
     catch (error) {
-      return { error: error.message };
+      return error.message.replace("Firebase: ", "");;
     }
   }
 
@@ -82,10 +70,19 @@ export default () => {
   const loginAnonymously = async () => {
     try {
       await signInAnonymously(auth);
-      return { };
     }
     catch (error) {
-      return { error: error.message }
+      return error.message.replace("Firebase: ", "");;
+    }
+  }
+
+  // Logout the currently logged in user
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    }
+    catch (error) {
+      return error.message.replace("Firebase: ", "");;
     }
   }
 
@@ -93,10 +90,9 @@ export default () => {
   const resetPassword = async (email) => {
     try {
       await sendPasswordResetEmail(auth, email);
-      return { };
     }
     catch (error) {
-      return { error: error.message }
+      return error.message.replace("Firebase: ", "");;
     }
   }
 

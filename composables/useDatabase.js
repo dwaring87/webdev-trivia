@@ -6,7 +6,7 @@ const app = initializeApp(config.firebase);
 const database = getDatabase(app);
 const { id:currentUser } = useAuth();
 
-// Game key for the currently loaded game (kept it local storage)
+// Game key for the currently loaded game (kept in local storage)
 const currentGame = useLocalStorage('current-game');
 const hasGame = computed(() => {
   return !!currentGame.value && currentGame.value !== '' && gameKeys.value.includes(currentGame.value)

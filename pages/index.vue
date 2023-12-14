@@ -8,6 +8,7 @@
 
   const { isLoggedIn, displayName } = useAuth();
   const { hasGame, currentGame, date, host } = useDatabase();
+
   const showGameDialog = ref(false);
   const showLoginDialog = ref(false);
   const showRegisterDialog = ref(false);

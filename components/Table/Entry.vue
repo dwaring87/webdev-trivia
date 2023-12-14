@@ -15,7 +15,6 @@
     <p class="hidden group-hover:block" @click="showDeleteDialog = true">
       <MdiDelete class="inline text-rose-800" />
     </p>
-
     <DialogDeleteTeam :open="showDeleteDialog" :team="team" @close="showDeleteDialog = false" />
   </td>
 </template>

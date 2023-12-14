@@ -30,9 +30,9 @@
     password_required.value = !password.value || password.value === '';
 
     if ( !name_required.value && !email_required.value && !password_required.value ) {
-      const { error, user } = await register(name.value, email.value, password.value);
-      if ( error || !user ) {
-        error_message.value = (error || "Could not register new account").replace("Firebase: ", "");
+      const error = await register(name.value, email.value, password.value);
+      if ( error ) {
+        error_message.value = error;
       }
       else {
         close();
