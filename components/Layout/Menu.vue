@@ -16,9 +16,8 @@
 
   const { public:config } = useRuntimeConfig();
   const { isLoggedIn, email } = useAuth();
-  const { hasGame, date, host, owner } = useDatabase();
+  const { hasGame, currentGame, date, host, owner } = useDatabase();
   const route = useRoute();
-  const currentGame = useLocalStorage('current-game');
 
   const showCreateDialog = ref(false);
   const showDeleteDialog = ref(false);

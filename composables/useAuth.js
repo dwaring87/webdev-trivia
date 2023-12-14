@@ -8,7 +8,6 @@ import {
 const { public:config } = useRuntimeConfig();
 const app = initializeApp(config.firebase);
 const auth = getAuth(app);
-const currentGameKey = useLocalStorage('current-game');
 
 export default () => {
 

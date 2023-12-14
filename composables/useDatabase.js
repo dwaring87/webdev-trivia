@@ -8,8 +8,10 @@ const database = getDatabase(app);
 const auth = getAuth(app);
 
 // Game key for the currently loaded game (kept it local storage)
-const currentGameKey = useLocalStorage('current-game');
-const hasGame = computed(() => !!currentGameKey.value && currentGameKey.value !== '');
+const currentGame = useLocalStorage('current-game');
+const hasGame = computed(() => {
+  return !!currentGame.value && currentGame.value !== '' && gameKeys.value.includes(currentGame.value)
+});
 
 // Game properties (vue refs used in the app)
 const date = ref();
@@ -17,13 +19,16 @@ const host = ref();
 const owner = ref();
 const scores = ref([]);
 
+// List of existing game keys
+const gameKeys = ref([]);
+
 // Sorting properties (updated with the setTeamSort function)
 const _sort_key = ref('entry');
 const _sort_descending = ref(false);
 
 // Game key watcher:
 // set value listeners that update the vue refs for the current game properties
-watch(currentGameKey, (n, o) => {
+watch(currentGame, (n, o) => {
   if ( o ) {
     off(dbRef(database, `games/${o}/date`));
     off(dbRef(database, `games/${o}/host`));
@@ -46,11 +51,11 @@ export default () => {
     const t = new Date().getTime();
     const o = auth?.currentUser?.email;
     if ( o ) {
-      currentGameKey.value = md5([d, h, t]);
+      currentGame.value = md5([d, h, t]);
       set(
-        dbRef(database, `games/${currentGameKey.value}`),
+        dbRef(database, `games/${currentGame.value}`),
         {
-          key: currentGameKey.value,
+          key: currentGame.value,
           date: d,
           host: h,
           created: t,
@@ -58,15 +63,15 @@ export default () => {
           scores: {}
         }
       );
-      return currentGameKey.value;
+      return currentGame.value;
     }
   }
 
   // Remove the current game from the database
   const clearGame = () => {
-    if ( currentGameKey.value ) {
-      remove(dbRef(database, `games/${currentGameKey.value}`));
-      currentGameKey.value = '';
+    if ( currentGame.value ) {
+      remove(dbRef(database, `games/${currentGame.value}`));
+      currentGame.value = '';
     }
   }
 
@@ -83,10 +88,10 @@ export default () => {
   // e = entry number
   // n = team name
   const addTeam = (e, n) => {
-    if ( currentGameKey.value ) {
+    if ( currentGame.value ) {
       const team_key = md5(n);
       set(
-        dbRef(database, `games/${currentGameKey.value}/scores/${team_key}`),
+        dbRef(database, `games/${currentGame.value}/scores/${team_key}`),
         {
           entry: e,
           name: n,
@@ -106,9 +111,9 @@ export default () => {
   // Remove a team from the current game
   // n = team name
   const removeTeam = (n) => {
-    if ( currentGameKey.value ) {
+    if ( currentGame.value ) {
       const team_key = md5(n);
-      remove(dbRef(database, `games/${currentGameKey.value}/scores/${team_key}`));
+      remove(dbRef(database, `games/${currentGame.value}/scores/${team_key}`));
     }
   }
 
@@ -162,7 +167,7 @@ export default () => {
   const setScore = (team, round, score=false) => {
     const key = md5(team);
     scores.value[key][`round${round}`] = score;
-    set(dbRef(database, `games/${currentGameKey.value}/scores/${key}/round${round}`), score);
+    set(dbRef(database, `games/${currentGame.value}/scores/${key}/round${round}`), score);
     _calc();
   }
 
@@ -179,7 +184,7 @@ export default () => {
       }
       scores.value[key].total = team_total > 0 ? team_total : false;
       totals.push(team_total);
-      set(dbRef(database, `games/${currentGameKey.value}/scores/${key}/total`), scores.value[key].total);
+      set(dbRef(database, `games/${currentGame.value}/scores/${key}/total`), scores.value[key].total);
     }
 
     // Set the ranks
@@ -188,7 +193,7 @@ export default () => {
     for ( const key in scores.value ) {
       const team_rank = sorted.indexOf(scores.value[key].total) + 1;
       scores.value[key].rank = team_rank;
-      set(dbRef(database, `games/${currentGameKey.value}/scores/${key}/rank`), scores.value[key].rank);
+      set(dbRef(database, `games/${currentGame.value}/scores/${key}/rank`), scores.value[key].rank);
     }
 
   }
@@ -200,13 +205,16 @@ export default () => {
     games.forEach((game) => {
       game.teams = Object.values(game.scores || {}).length;
       game.winner = Object.values(game.scores || {}).filter((e) => e.rank === 1).map((e) => e.name).join(', ');
+      gameKeys.value.push(game.key);
     });
-    console.log(games);
     return games;
   };
+
+  // Update the games on loading the composable
+  getGames();
   
   return {
-    hasGame, date, host, owner, scores, teams, nextEntry,
+    hasGame, currentGame, date, host, owner, scores, teams, nextEntry,
     createGame, addTeam, removeTeam, clearGame, clearScores,
     setTeamSort, teamScores, getScore, setScore,
     getGames

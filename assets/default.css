@@ -15,6 +15,10 @@ h4 {
   @apply font-semibold;
 }
 
+a {
+  @apply underline font-semibold;
+}
+
 .container {
   @apply max-w-7xl mx-auto px-2 sm:px-6 lg:px-8;
 }
@@ -59,4 +63,7 @@ h4 {
 
 .error {
   @apply bg-rose-800/10 text-rose-800 border border-rose-800 rounded-md p-4 font-semibold;
+}
+.well {
+  @apply bg-gray-200 text-gray-900 border border-gray-600 rounded-md p-4 shadow-md;
 }

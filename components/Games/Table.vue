@@ -39,7 +39,7 @@
             <table class="w-full divide-y divide-cyan-900">
               <thead class="bg-cyan-800 text-white text-center">
                 <tr>
-                  <th></th>
+                  <th class="hidden md:table-cell"></th>
                   <TableHeader
                     label="Date" sortKey="date" :sort="sort" :descending="descending" @click="toggleSort('date')" />
                   <TableHeader 
@@ -52,9 +52,13 @@
               </thead>
               <tbody class="divide-y divide-gray-200 bg-white text-center text-gray-500">
                 <tr v-for="(game, game_index) in sortedGames" :key="game_index"
-                    :class="[game_index % 2 ? 'bg-gray-100' : 'bg-white', 'hover:bg-orange-800/10 cursor-pointer']"
+                    :class="[
+                      game_index % 2 ? 'bg-gray-100' : 'bg-white',
+                      email && game.owner === email ? 'font-semibold' : 'font-normal',
+                      'hover:bg-orange-800/10 cursor-pointer'
+                    ]"
                     @click="loadGame(game.key)">
-                  <td class="tc"><p><MdiAccount v-if="game.owner === email" class="mx-auto text-emerald-700" /></p></td>
+                  <td class="tc hidden md:table-cell"><p><MdiAccount v-if="email && game.owner === email" class="mx-auto text-emerald-700" /></p></td>
                   <td class="tc"><p>{{ game.date }}</p></td>
                   <td class="tc">{{ game.host }}</td>
                   <td class="tc">{{ game.teams }}</td>
