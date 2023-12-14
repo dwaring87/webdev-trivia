@@ -15,8 +15,8 @@
   import MdiClearScores from '~icons/mdi/eraser';
 
   const { public:config } = useRuntimeConfig();
-  const { isLoggedIn } = useAuth();
-  const { hasGame } = useDatabase();
+  const { isLoggedIn, email } = useAuth();
+  const { hasGame, date, host, owner } = useDatabase();
   const route = useRoute();
   const currentGame = useLocalStorage('current-game');
 
@@ -26,18 +26,25 @@
   const showLoginDialog = ref(false);
   const showRegisterDialog = ref(false);
   const showLogoutDialog = ref(false);
+  const editable = computed(() => {
+    return !!email.value && email.value === owner.value;
+  });
 
 
   // ==== LINK DEFINITIONS ==== //
 
   // Pages within the app
-  const PAGE_CURRENT_GAME = { label: 'Current Game', class: 'btn-blue', icon: MdiCurrentGame, click: () => navigateTo(`/game/${currentGame.value}`) };
+  const PAGE_CURRENT_GAME = computed(() => { 
+    return { label: 'Current Game', sublabel: `${date.value} | ${host.value}`, class: 'btn-blue', icon: MdiCurrentGame, click: () => navigateTo(`/game/${currentGame.value}`) };
+  });
   const PAGE_PAST_GAMES = { label: 'Past Games', class: 'btn-blue', icon: MdiPastGames, click: () => navigateTo('/history') };
 
   // Login functions, displayed when not logged in
   const USER_LOGIN = { label: 'Login', class: 'btn-amber', icon: MdiLogin, click: () => showLoginDialog.value = true };
   const USER_REGISTER = { label: 'Register', class: 'btn-green', icon: MdiRegister, click: () => showRegisterDialog.value = true };
-  const USER_LOGOUT = { label: 'Logout', class: 'btn-amber', icon: MdiLogout, click: () => showLogoutDialog.value = true };
+  const USER_LOGOUT = computed(() => {
+    return { label: 'Logout', sublabel: email.value, class: 'btn-amber', icon: MdiLogout, click: () => showLogoutDialog.value = true };
+  });
 
   // Game functions
   const GAME_NEW = { label: 'New Game', class: 'btn-green', icon: MdiNewGame, click: () => showCreateDialog.value = true };
@@ -50,12 +57,12 @@
   // Links of the main toolbar
   const toolbar_main = computed(() => {
     const rtn = [];
-    if ( !isLoggedIn() ) {
-      rtn.push(USER_LOGIN);
-      rtn.push(USER_REGISTER);
+    if ( isLoggedIn() ) {
+      rtn.push(GAME_NEW);
     }
     else {
-      rtn.push(GAME_NEW);
+      rtn.push(USER_LOGIN);
+      rtn.push(USER_REGISTER);
     }
     return rtn;
   });
@@ -64,20 +71,24 @@
   const toolbar_more = computed(() => {
     const rtn = [];
 
-    if ( isLoggedIn() && hasGame.value && route.path.startsWith('/game') ) {
+    // Add game functions on game page
+    // if the user is logged in and the owner of the game
+    if ( route.path.startsWith('/game') && isLoggedIn() && hasGame.value && editable.value ) {
       rtn.push(GAME_CLEAR);
       rtn.push(GAME_DELETE);
     }
 
+    // Add page links back to current game or past games table
+    if ( (route.path === '/' || route.path === '/history') && hasGame.value ) {
+      rtn.push(PAGE_CURRENT_GAME.value);
+    }
     if ( route.path === '/' || route.path.startsWith('/game') ) {
       rtn.push(PAGE_PAST_GAMES);
     }
-    else if ( route.path === '/history' ) {
-      rtn.push(PAGE_CURRENT_GAME);
-    }
 
+    // Add logout
     if ( isLoggedIn() ) {
-      rtn.push(USER_LOGOUT);
+      rtn.push(USER_LOGOUT.value);
     }
 
     return rtn;
@@ -135,7 +146,10 @@
                   <MenuItem v-for="(item, index) in toolbar_more" :key="item.label" :class="['p-2 whitespace-nowrap rounded-md', index !== 0 ? 'mt-1' : 'm-0']">
                     <DisclosureButton class="w-full flex justify-start items-center hover:bg-gray-200" @click="item.click">
                       <component :is="item.icon" :class="['inline mr-2 rounded-md w-8 h-8 p-1 shadow-sm', item.class]"></component>
-                      <span>{{ item.label }}</span>
+                      <div class='flex flex-col text-left'>
+                        <span>{{ item.label }}</span>
+                        <span class='text-sm text-gray-400'>{{ item.sublabel }}</span>
+                      </div>
                     </DisclosureButton>
                   </MenuItem>
                 </MenuItems>
@@ -154,8 +168,13 @@
                 index === 0 ? 'rounded-t-md' : 'rounded-t-none', 
                 index === toolbar_more.length - 1 ? 'rounded-b-md mb-4' : 'rounded-b-none'
               ]">
-            <component :is="item.icon" class="inline mr-2"></component>
-            <span>{{ item.label }}</span>
+            <div class='flex flex-col'>
+              <div class='flex text-center justify-center'>
+                <component :is="item.icon" class="inline mr-2 mt-0.5"></component>
+                <span>{{ item.label }}</span>
+              </div>
+              <span class='text-sm opacity-60'>{{ item.sublabel }}</span>
+            </div>
           </DisclosureButton>
         </div>
       </DisclosurePanel>
