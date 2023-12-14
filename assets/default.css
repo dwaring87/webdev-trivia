@@ -6,13 +6,17 @@ h1 {
   @apply text-2xl font-extrabold text-cyan-800 md:text-3xl lg:text-4xl my-2;
 }
 h2 {
-  @apply text-xl font-bold text-cyan-800 md:text-xl lg:text-2xl my-2 border-b border-cyan-700/10;
+  @apply text-xl font-bold text-sky-800 md:text-xl lg:text-2xl my-2 border-b border-sky-700/10;
 }
 h3 {
   @apply text-lg md:text-lg lg:text-xl font-bold text-emerald-800 opacity-80;
 }
 h4 {
   @apply font-semibold;
+}
+
+a {
+  @apply underline font-semibold;
 }
 
 .container {
@@ -25,12 +29,18 @@ h4 {
 .input {
   @apply block w-full rounded-md border-2 border-gray-600/50 py-1.5 pl-10 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-amber-700;
 }
+.input:disabled {
+  @apply bg-gray-100 border-gray-600/20;
+}
 .label {
   @apply block text-sm font-medium leading-6 text-gray-900;
 }
 
 .btn {
-  @apply inline-flex w-full justify-center rounded-md bg-white hover:bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm sm:mt-0 sm:w-auto border border-gray-800/20 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-amber-700;
+  @apply inline-flex items-center w-full justify-center rounded-md bg-white hover:bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm sm:mt-0 sm:w-auto border border-gray-800/20 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-amber-700;
+}
+.btn:disabled {
+  @apply opacity-50;
 }
 .btn-small {
   @apply p-1;
@@ -46,4 +56,14 @@ h4 {
 }
 .btn-amber {
   @apply bg-amber-600/90 hover:bg-amber-600 text-white;
+}
+.btn-blue {
+  @apply bg-sky-800/90 hover:bg-sky-800 text-white;
+}
+
+.error {
+  @apply bg-rose-800/10 text-rose-800 border border-rose-800 rounded-md p-4 font-semibold;
+}
+.well {
+  @apply bg-gray-200 text-gray-900 border border-gray-600 rounded-md p-4 shadow-md;
 }

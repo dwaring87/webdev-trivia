@@ -1,26 +1,32 @@
 <script setup>
-  const { teams } = useGame();
+  const { editable, teams, setTeamSort } = useDatabase();
 
+  // Sorting options
   const sort = ref("entry");
   const descending = ref(false);
   const toggleSort = (key) => {
     descending.value = key === sort.value ? !descending.value : descending.value;
     sort.value = key;
+    setTeamSort(sort.value, descending.value);
   }
 
-  let _sorted_teams = [];
+  // List of sorted teams
+  let _sorted_teams = teams;
   const sortedTeams = computed(() => {
     if ( !editRound.value ) {
-      _sorted_teams = teams(sort.value, descending.value);
+      _sorted_teams = teams.value;
     }
     return _sorted_teams;
   });
 
+  // Editing properties and save function
   const editRound = ref();
   const editTeam = ref();
   const edit = (round, team) => {
-    editRound.value = round;
-    editTeam.value = team;
+    if ( editable.value ) {
+      editRound.value = round;
+      editTeam.value = team;
+    }
   }
   const save = () => {
     editRound.value = undefined;
@@ -62,7 +68,8 @@
                     :team="team" />
                   <TableTotal class="tc bg-cyan-800/20 hidden md:table-cell"
                     :team="team" />
-                  <TableScore v-for="round in 5" :key="`round-${round}`" class="tc cursor-pointer hidden md:table-cell" 
+                  <TableScore v-for="round in 5" :key="`round-${round}`" 
+                    :class="[editable ? 'cursor-pointer' : 'cursor-default', 'tc hidden md:table-cell']" 
                     :team="team" :round="round" :edit="editRound === round" :focus="editRound === round && editTeam === team"
                     @click="edit(round, team)" @save="save()" />
                   <td class="tc table-cell md:hidden">

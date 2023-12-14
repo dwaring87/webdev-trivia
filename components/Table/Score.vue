@@ -7,7 +7,8 @@
   });
   const emit = defineEmits(['save']);
 
-  const { getScore, setScore } = useGame();
+  // Get / Set score for a specific team and round
+  const { getScore, setScore } = useDatabase();
   const score = computed({
     get: () => {
       return getScore(props.team, props.round);
@@ -17,10 +18,12 @@
     }
   });
 
+  // Save the score values
   const save = () => {
     emit('save');
   }
 
+  // Move input focus to the score input when focused
   const score_ref = ref();
   watch(() => props.focus, (v) => {
     if ( v ) {

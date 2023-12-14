@@ -1,6 +1,6 @@
 <script setup>
   const { public:config } = useRuntimeConfig();
-  const BASE_TITLE = config.app_title;
+  const BASE_TITLE = config.title;
 
   useHead({
     titleTemplate: (title) => {

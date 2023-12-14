@@ -5,17 +5,16 @@
     team: String
   });
 
-  const { scores } = useGame();
+  const { teamScores } = useDatabase();
   const showDeleteDialog = ref(false);
 </script>
 
 <template>
   <td class="group cursor-pointer">
-    <p class="group-hover:hidden">{{ scores[team].entry }}</p>
+    <p class="group-hover:hidden">{{ teamScores(props.team).entry }}</p>
     <p class="hidden group-hover:block" @click="showDeleteDialog = true">
       <MdiDelete class="inline text-rose-800" />
     </p>
-
     <DialogDeleteTeam :open="showDeleteDialog" :team="team" @close="showDeleteDialog = false" />
   </td>
 </template>
