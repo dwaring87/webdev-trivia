@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
 import {
   getAuth, onAuthStateChanged, updateProfile, signOut,
-  createUserWithEmailAndPassword, signInWithEmailAndPassword,
-  GoogleAuthProvider, signInWithRedirect, getRedirectResult
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail,
+  GoogleAuthProvider, signInWithRedirect, getRedirectResult, signInAnonymously
 } from "firebase/auth";
 
 const { public:config } = useRuntimeConfig();
@@ -20,14 +20,16 @@ export default () => {
   // User properties to make available to the app
   const email = ref(auth.currentUser?.email);
   const displayName = ref(auth.currentUser?.displayName);
+  const id = ref(auth.currentUser?.uid)
   onAuthStateChanged(auth, (_user) => {
-    email.value = _user?.email;
+    id.value = _user?.uid;
+    email.value = _user?.email || (id.value ? `anonymous <${id.value.substring(0,4)}...${id.value.substring(id.value.length-4)}>` : undefined);
     displayName.value = _user?.displayName;
   });
 
   // Check if there is a logged in user
   const isLoggedIn = () => {
-    return !!email.value;
+    return !!id.value;
   }
 
   // Register a new user using an email and password
@@ -76,7 +78,31 @@ export default () => {
     }
   }
 
+  // Login Anonymously
+  const loginAnonymously = async () => {
+    try {
+      await signInAnonymously(auth);
+      return { };
+    }
+    catch (error) {
+      return { error: error.message }
+    }
+  }
+
+  // Request password reset email
+  const resetPassword = async (email) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      return { };
+    }
+    catch (error) {
+      return { error: error.message }
+    }
+  }
+
   return {
-    email, displayName, isLoggedIn, register, login, logout, loginWithGoogle
+    id, email, displayName, 
+    isLoggedIn, register, logout, resetPassword, 
+    login, loginWithGoogle, loginAnonymously
   }
 }

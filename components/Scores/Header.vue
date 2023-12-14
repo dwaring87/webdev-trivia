@@ -8,12 +8,7 @@
     host: String
   });
 
-  const { owner } = useDatabase();
-  const { email } = useAuth();
-  const editable = computed(() => {
-    return owner.value && owner.value === email.value;
-  });
-
+  const { editable } = useDatabase();
   const showTeamDialog = ref(false);
 </script>
 
@@ -29,7 +24,7 @@
         <MdiView class="inline mr-2" />You can <strong>view</strong> this game.
       </p>
     </div>
-    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+    <div v-if="editable" class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
       <button @click="showTeamDialog = true" type="button" class="btn btn-green">
         <MdiTeam class="mr-2" aria-hidden="true" />
         Add Team

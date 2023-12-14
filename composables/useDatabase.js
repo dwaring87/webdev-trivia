@@ -1,11 +1,10 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref as dbRef, get, set, remove, onValue, off } from "firebase/database";
-import { getAuth } from "firebase/auth";
 
 const { public:config } = useRuntimeConfig();
 const app = initializeApp(config.firebase);
 const database = getDatabase(app);
-const auth = getAuth(app);
+const { id:currentUser } = useAuth();
 
 // Game key for the currently loaded game (kept it local storage)
 const currentGame = useLocalStorage('current-game');
@@ -18,6 +17,7 @@ const date = ref();
 const host = ref();
 const owner = ref();
 const scores = ref([]);
+const editable = ref(false);
 
 // List of existing game keys
 const gameKeys = ref([]);
@@ -26,7 +26,7 @@ const gameKeys = ref([]);
 const _sort_key = ref('entry');
 const _sort_descending = ref(false);
 
-// Game key watcher:
+// Current Game watcher:
 // set value listeners that update the vue refs for the current game properties
 watch(currentGame, (n, o) => {
   if ( o ) {
@@ -43,14 +43,19 @@ watch(currentGame, (n, o) => {
   }
 }, { immediate: true });
 
+// Game Owner and Current User water:
+// update the editable state when the owner or current user changes
+watch([owner, currentUser], ([new_owner, new_user]) => {
+  editable.value = !!new_owner && !!new_user && new_owner === new_user;
+}, { immediate: true });
+
 export default () => {
  
   // Create a new game with the specified date and host
   // User must be logged in to create a game (set as owner)
   const createGame = (d, h) => {
     const t = new Date().getTime();
-    const o = auth?.currentUser?.email;
-    if ( o ) {
+    if ( currentUser.value ) {
       currentGame.value = md5([d, h, t]);
       set(
         dbRef(database, `games/${currentGame.value}`),
@@ -59,7 +64,7 @@ export default () => {
           date: d,
           host: h,
           created: t,
-          owner: o,
+          owner: currentUser.value,
           scores: {}
         }
       );
@@ -214,10 +219,9 @@ export default () => {
   getGames();
   
   return {
-    hasGame, currentGame, date, host, owner, scores, teams, nextEntry,
+    hasGame, currentGame, date, host, owner, editable, scores, teams, nextEntry,
     createGame, addTeam, removeTeam, clearGame, clearScores,
-    setTeamSort, teamScores, getScore, setScore,
-    getGames
+    setTeamSort, teamScores, getScore, setScore, getGames
   };
 }
 

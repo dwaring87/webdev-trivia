@@ -16,7 +16,7 @@
 
   const { public:config } = useRuntimeConfig();
   const { isLoggedIn, email } = useAuth();
-  const { hasGame, currentGame, date, host, owner } = useDatabase();
+  const { hasGame, currentGame, date, host, owner, editable } = useDatabase();
   const route = useRoute();
 
   const showCreateDialog = ref(false);
@@ -25,9 +25,6 @@
   const showLoginDialog = ref(false);
   const showRegisterDialog = ref(false);
   const showLogoutDialog = ref(false);
-  const editable = computed(() => {
-    return !!email.value && email.value === owner.value;
-  });
 
 
   // ==== LINK DEFINITIONS ==== //
@@ -56,10 +53,10 @@
   // Links of the main toolbar
   const toolbar_main = computed(() => {
     const rtn = [];
-    if ( isLoggedIn() ) {
+    if ( route.path !== '/' && isLoggedIn() ) {
       rtn.push(GAME_NEW);
     }
-    else {
+    else if ( route.path !== '/' && !isLoggedIn() ) {
       rtn.push(USER_LOGIN);
       rtn.push(USER_REGISTER);
     }

@@ -3,7 +3,7 @@
   import MdiNext from '~icons/mdi/chevron-right';
 
   const { getGames } = useDatabase();
-  const { email } = useAuth();
+  const { id } = useAuth();
 
   const games = ref([]);
   games.value = await getGames();
@@ -54,11 +54,11 @@
                 <tr v-for="(game, game_index) in sortedGames" :key="game_index"
                     :class="[
                       game_index % 2 ? 'bg-gray-100' : 'bg-white',
-                      email && game.owner === email ? 'font-semibold' : 'font-normal',
+                      id && game.owner === id ? 'font-semibold' : 'font-normal',
                       'hover:bg-orange-800/10 cursor-pointer'
                     ]"
                     @click="loadGame(game.key)">
-                  <td class="tc hidden md:table-cell"><p><MdiAccount v-if="email && game.owner === email" class="mx-auto text-emerald-700" /></p></td>
+                  <td class="tc hidden md:table-cell"><p><MdiAccount v-if="id && game.owner === id" class="mx-auto text-emerald-700" /></p></td>
                   <td class="tc"><p>{{ game.date }}</p></td>
                   <td class="tc">{{ game.host }}</td>
                   <td class="tc">{{ game.teams }}</td>

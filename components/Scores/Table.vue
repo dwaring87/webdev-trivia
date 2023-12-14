@@ -1,10 +1,6 @@
 <script setup>
-  const { owner, teams, setTeamSort } = useDatabase();
-  const { email } = useAuth();
-
-  const editable = computed(() => {
-    return owner.value && owner.value === email.value;
-  });
+  const { teams, setTeamSort } = useDatabase();
+  const { editable } = useDatabase();
 
   const sort = ref("entry");
   const descending = ref(false);
@@ -70,7 +66,8 @@
                     :team="team" />
                   <TableTotal class="tc bg-cyan-800/20 hidden md:table-cell"
                     :team="team" />
-                  <TableScore v-for="round in 5" :key="`round-${round}`" class="tc cursor-pointer hidden md:table-cell" 
+                  <TableScore v-for="round in 5" :key="`round-${round}`" 
+                    :class="[editable ? 'cursor-pointer' : 'cursor-default', 'tc hidden md:table-cell']" 
                     :team="team" :round="round" :edit="editRound === round" :focus="editRound === round && editTeam === team"
                     @click="edit(round, team)" @save="save()" />
                   <td class="tc table-cell md:hidden">
