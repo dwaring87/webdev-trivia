@@ -144,6 +144,20 @@ export default () => {
     }
   }
 
+  // Update the name of an existing team
+  // o = old team name
+  // n = new team name
+  const updateTeamName = (o, n) => {
+    if ( currentGame.value && o !== n ) {
+      const old_team_key = md5(o);
+      const new_team_key = md5(n);
+      const copy = { ...scores.value[old_team_key] };
+      copy.name = n;
+      set(dbRef(database, `games/${currentGame.value}/scores/${new_team_key}`), copy);
+      remove(dbRef(database, `games/${currentGame.value}/scores/${old_team_key}`));
+    }
+  }
+
   // Get the next entry number for the next team to be added to the current game
   const nextEntry = computed(() => {
     let max = 0;
@@ -187,7 +201,7 @@ export default () => {
   // Get the score for the specified team and round
   const getScore = (team, round) => {
     const key = md5(team);
-    return scores.value[key][`round${round}`];
+    return scores.value[key] ? scores.value[key][`round${round}`] : undefined;
   }
 
   // Set the score for the specified team and round
@@ -227,7 +241,8 @@ export default () => {
   
   return {
     initializing, hasGame, currentGame, date, rounds, host, owner, editable, scores, teams, nextEntry,
-    createGame, addTeam, removeTeam, clearGame, clearScores, setTeamSort, teamScores, getScore, setScore, getGames
+    createGame, addTeam, removeTeam, updateTeamName,
+    clearGame, clearScores, setTeamSort, teamScores, getScore, setScore, getGames
   };
 }
 

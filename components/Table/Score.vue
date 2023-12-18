@@ -35,13 +35,13 @@
 </script>
 
 <template>
-  <div>
+  <td>
     <div v-if="edit">
       <input v-model="score" v-on:keyup.enter="save()" ref="score_ref"
         class="input score-input" type="number" name="score" id="score" />
     </div>
     <p v-else class="py-2" v-html="!! score ? score : '&mdash;'"></p>
-  </div>
+  </td>
 </template>
 
 <style scoped>

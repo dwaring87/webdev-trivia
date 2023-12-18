@@ -5,7 +5,7 @@
 
   const { teamScores } = useDatabase();
   const total = computed(() => {
-    const t = teamScores(props.team).total;
+    const t = teamScores(props.team)?.total;
     return !!t ? t : '&mdash;';
   });
 </script>

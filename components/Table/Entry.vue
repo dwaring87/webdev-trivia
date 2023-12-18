@@ -11,7 +11,7 @@
 
 <template>
   <td :class="[editable ? 'cursor-pointer' : 'cursor-default', 'group']">
-    <p :class="[editable ? 'block group-hover:hidden' : 'block']">{{ teamScores(props.team).entry }}</p>
+    <p :class="[editable ? 'block group-hover:hidden' : 'block']">{{ teamScores(props.team)?.entry }}</p>
     <p :class="[editable ? 'hidden group-hover:block' : 'hidden']" @click="showDeleteDialog = editable ? true : false">
       <MdiDelete class="inline text-rose-800" />
     </p>
