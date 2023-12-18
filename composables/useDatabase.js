@@ -1,7 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref as dbRef, get, set, remove, onValue, off } from "firebase/database";
 
+const initializing = ref(true);
 const { public:config } = useRuntimeConfig();
+if ( config.firebase?.databaseURL === 'NOT_SET' ) throw new Error('Firebase Database URL not set!');
 const app = initializeApp(config.firebase);
 const database = getDatabase(app);
 const { id:currentUser } = useAuth();
@@ -36,6 +38,7 @@ const getGames = async () => {
       gameKeys.value.push(`${game.owner}/${game.key}`);
     })
   });
+  initializing.value = false;
   return games;
 };
 getGames();
@@ -225,7 +228,7 @@ export default () => {
   }
   
   return {
-    hasGame, currentGame, date, host, owner, editable, scores, teams, nextEntry,
+    initializing, hasGame, currentGame, date, host, owner, editable, scores, teams, nextEntry,
     createGame, addTeam, removeTeam, clearGame, clearScores,
     setTeamSort, teamScores, getScore, setScore, getGames
   };

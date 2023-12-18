@@ -1,14 +1,19 @@
 <script setup>
   import MdiAlert from '~icons/mdi/alert-circle';
+  import MdiLoading from '~icons/mdi/progress-download';
 
   const { params } = useRoute();
-  const { currentGame, hasGame, date, host } = useDatabase();
+  const { initializing, currentGame, hasGame, date, host } = useDatabase();
   currentGame.value = `${params.user}/${params.game}`;
 </script>
 
 <template>
   <div class="container">
-    <div v-if="hasGame">
+    <div v-if="initializing" class="my-8 flex justify-center items-center gap-x-2">
+      <MdiLoading />
+      <p>Loading...</p>
+    </div>
+    <div v-else-if="hasGame">
       <ScoresHeader :date="date" :host="host" />
       <ScoresTable />
     </div>

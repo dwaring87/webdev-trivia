@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 
 const { public:config } = useRuntimeConfig();
+if ( config.firebase?.apiKey === 'NOT_SET' ) throw new Error('Firebase API Key not set!');
 const app = initializeApp(config.firebase);
 const auth = getAuth(app);
 
