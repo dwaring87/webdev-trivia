@@ -16,6 +16,7 @@ const hasGame = computed(() => {
 
 // Game properties (vue refs used in the app)
 const date = ref();
+const rounds = ref();
 const host = ref();
 const owner = ref();
 const scores = ref([]);
@@ -52,12 +53,14 @@ const _sort_descending = ref(false);
 watch(currentGame, (n, o) => {
   if ( o ) {
     off(dbRef(database, `games/${o}/date`));
+    off(dbRef(database, `games/${o}/rounds`));
     off(dbRef(database, `games/${o}/host`));
     off(dbRef(database, `games/${o}/owner`));
     off(dbRef(database, `games/${o}/scores`));
   }
   if ( n ) {
     onValue(dbRef(database, `games/${n}/date`), (s) => date.value = s.val());
+    onValue(dbRef(database, `games/${n}/rounds`), (s) => rounds.value = s.val());
     onValue(dbRef(database, `games/${n}/host`), (s) => host.value = s.val());
     onValue(dbRef(database, `games/${n}/owner`), (s) => owner.value = s.val());
     onValue(dbRef(database, `games/${n}/scores`), (s) => scores.value = s.val());
@@ -72,24 +75,23 @@ watch([owner, currentUser], ([new_owner, new_user]) => {
 
 export default () => {
  
-  // Create a new game with the specified date and host
+  // Create a new game with the specified date, number of rounds, and host
   // User must be logged in to create a game (set as owner)
-  const createGame = async (d, h) => {
+  const createGame = async (d, r, h) => {
     const t = new Date().getTime();
     if ( currentUser.value ) {
       const gameKey = md5([d, h, t]);
       currentGame.value = `${currentUser.value}/${gameKey}`;
-      set(
-        dbRef(database, `games/${currentGame.value}`),
-        {
-          owner: currentUser.value,
-          key: gameKey,
-          date: d,
-          host: h,
-          created: t,
-          scores: {}
-        }
-      );
+      const init = {
+        owner: currentUser.value,
+        key: gameKey,
+        date: d,
+        rounds: r,
+        host: h,
+        created: t,
+        scores: {}
+      }
+      set(dbRef(database, `games/${currentGame.value}`), init);
       await getGames();
       return currentGame.value;
     }
@@ -107,7 +109,7 @@ export default () => {
   // Remove all of the teams' scores from the current game
   const clearScores = () => {
     teams.value.forEach((team) => {
-      for ( let round = 1; round <= 5; round ++ ) {
+      for ( let round = 1; round <= rounds.value; round ++ ) {
         setScore(team, round);
       }
     });
@@ -119,21 +121,17 @@ export default () => {
   const addTeam = (e, n) => {
     if ( currentGame.value ) {
       const team_key = md5(n);
-      set(
-        dbRef(database, `games/${currentGame.value}/scores/${team_key}`),
-        {
-          entry: e,
-          name: n,
-          round1: false,
-          round2: false,
-          round3: false,
-          round4: false,
-          round5: false,
-          bowlOff: false,
-          total: false,
-          rank: false
-        }
-      );
+      const init = {
+        entry: e,
+        name: n,
+        total: false,
+        rank: false,
+        tieBreaker: false
+      }
+      for ( let i = 1; i <= rounds.value; i++ ) {
+        init[`round${i}`] = false;
+      }
+      set(dbRef(database, `games/${currentGame.value}/scores/${team_key}`), init);
     }
   }
 
@@ -207,7 +205,7 @@ export default () => {
     const totals = [];
     for ( const key in scores.value ) {
       let team_total = 0;
-      for ( let round = 1; round <= 5; round++ ) {
+      for ( let round = 1; round <= rounds.value; round++ ) {
         const round_score = scores.value[key][`round${round}`];
         if ( round_score ) team_total = team_total + round_score;
       }
@@ -228,9 +226,8 @@ export default () => {
   }
   
   return {
-    initializing, hasGame, currentGame, date, host, owner, editable, scores, teams, nextEntry,
-    createGame, addTeam, removeTeam, clearGame, clearScores,
-    setTeamSort, teamScores, getScore, setScore, getGames
+    initializing, hasGame, currentGame, date, rounds, host, owner, editable, scores, teams, nextEntry,
+    createGame, addTeam, removeTeam, clearGame, clearScores, setTeamSort, teamScores, getScore, setScore, getGames
   };
 }
 

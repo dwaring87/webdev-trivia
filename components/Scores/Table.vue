@@ -1,5 +1,5 @@
 <script setup>
-  const { editable, teams, setTeamSort } = useDatabase();
+  const { editable, rounds, teams, setTeamSort } = useDatabase();
 
   // Sorting options
   const sort = ref("entry");
@@ -51,7 +51,7 @@
                     label="Rank" sortKey="rank" :sort="sort" :descending="descending" @click="toggleSort('rank')" />
                   <TableHeader class="hidden md:table-cell"
                     label="Total" sortKey="total" :sort="sort" :descending="descending" @click="toggleSort('total')" />
-                  <TableHeader v-for="i in 5" :key="`round${i}`" class="hidden md:table-cell"
+                  <TableHeader v-for="i in rounds" :key="`round${i}`" class="hidden md:table-cell"
                     :label="`Round ${i}`" :sortKey="`round${i}`" :sort="sort" :descending="descending" @click="toggleSort(`round${i}`)" />
                   <TableHeader class="table-cell md:hidden"
                     label="Scores" sortKey="total" :sort="sort" :descending="descending" @click="toggleSort('total')" />
@@ -68,7 +68,7 @@
                     :team="team" />
                   <TableTotal class="tc bg-cyan-800/20 hidden md:table-cell"
                     :team="team" />
-                  <TableScore v-for="round in 5" :key="`round-${round}`" 
+                  <TableScore v-for="round in rounds" :key="`round-${round}`" 
                     :class="[editable ? 'cursor-pointer' : 'cursor-default', 'tc hidden md:table-cell']" 
                     :team="team" :round="round" :edit="editRound === round" :focus="editRound === round && editTeam === team"
                     @click="edit(round, team)" @save="save()" />
@@ -81,7 +81,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="round in 5">
+                        <tr v-for="round in rounds">
                           <td class="font-semibold">{{ round }}</td>
                           <TableScore class="cursor-pointer min-w-[60px]" 
                             :team="team" :round="round" :edit="editRound === round" :focus="editRound === round && editTeam === team"

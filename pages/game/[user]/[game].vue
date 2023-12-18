@@ -3,7 +3,7 @@
   import MdiLoading from '~icons/mdi/progress-download';
 
   const { params } = useRoute();
-  const { initializing, currentGame, hasGame, date, host } = useDatabase();
+  const { initializing, currentGame, hasGame } = useDatabase();
   currentGame.value = `${params.user}/${params.game}`;
 </script>
 
@@ -14,7 +14,7 @@
       <p>Loading...</p>
     </div>
     <div v-else-if="hasGame">
-      <ScoresHeader :date="date" :host="host" />
+      <ScoresHeader />
       <ScoresTable />
     </div>
     <div v-else>
