@@ -1,4 +1,5 @@
 <script setup>
+  import MdiLoading from '~icons/mdi/progress-download';
   import MdiLogin from '~icons/mdi/login';
   import MdiRegister from '~icons/mdi/account-plus';
   import MdiAccount from '~icons/mdi/account-circle';
@@ -6,7 +7,7 @@
   import MdiCurrentGame from '~icons/mdi/table-large';
   import MdiPastGames from '~icons/mdi/history';
 
-  const { isLoggedIn, displayName } = useAuth();
+  const { initializing, isLoggedIn, displayName } = useAuth();
   const { hasGame, currentGame, date, host } = useDatabase();
 
   const showGameDialog = ref(false);
@@ -17,8 +18,13 @@
 <template>
   <div class="container">
 
+    <div v-if="initializing" class="my-16 flex justify-center items-center gap-x-2">
+      <MdiLoading />
+      <p>Loading...</p>
+    </div>
+
     <!-- NOT LOGGED IN: Show login/register -->
-    <div v-if="!isLoggedIn()" class="text-center mt-14">
+    <div v-else-if="!isLoggedIn()" class="text-center mt-14">
       <h3 class="font-semibold text-gray-900">
         <MdiAccount class="inline mr-1 -mt-1" />
         Login / Register

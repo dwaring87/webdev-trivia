@@ -5,6 +5,7 @@ import {
   GoogleAuthProvider, signInWithRedirect, getRedirectResult, signInAnonymously
 } from "firebase/auth";
 
+const initializing = ref(true);
 const { public:config } = useRuntimeConfig();
 if ( config.firebase?.apiKey === 'NOT_SET' ) throw new Error('Firebase API Key not set!');
 const app = initializeApp(config.firebase);
@@ -27,6 +28,7 @@ export default () => {
     id.value = _user?.uid;
     email.value = _user?.email || (id.value ? `anonymous <${id.value.substring(0,4)}...${id.value.substring(id.value.length-4)}>` : undefined);
     displayName.value = _user?.displayName;
+    initializing.value = false;
   });
 
   // Check if there is a logged in user
@@ -38,10 +40,12 @@ export default () => {
   // Register a new user using an email and password
   const register = async (name, email, password) => {
     try {
+      initializing.value = true;
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
     }
     catch (error) {
+      initializing.value = false;
       return error.message.replace("Firebase: ", "");
     };
   }
@@ -49,9 +53,11 @@ export default () => {
   // Login an existing user with an email and password
   const login = async (email, password) => {
     try {
+      initializing.value = true;
       await signInWithEmailAndPassword(auth, email, password);
     }
     catch (error) {
+      initializing.value = false;
       return error.message.replace("Firebase: ", "");;
     }
   }
@@ -59,10 +65,12 @@ export default () => {
   // Login using the Google provider
   const loginWithGoogle = async () => {
     try {
+      initializing.value = true;
       const provider = new GoogleAuthProvider();
       signInWithRedirect(auth, provider);
     }
     catch (error) {
+      initializing.value = false;
       return error.message.replace("Firebase: ", "");;
     }
   }
@@ -70,9 +78,11 @@ export default () => {
   // Login Anonymously
   const loginAnonymously = async () => {
     try {
+      initializing.value = true;
       await signInAnonymously(auth);
     }
     catch (error) {
+      initializing.value = false;
       return error.message.replace("Firebase: ", "");;
     }
   }
@@ -80,9 +90,11 @@ export default () => {
   // Logout the currently logged in user
   const logout = async () => {
     try {
+      initializing.value = true;
       await signOut(auth);
     }
     catch (error) {
+      initializing.value = false;
       return error.message.replace("Firebase: ", "");;
     }
   }
@@ -98,7 +110,7 @@ export default () => {
   }
 
   return {
-    id, email, displayName, 
+    initializing, id, email, displayName, 
     isLoggedIn, register, logout, resetPassword, 
     login, loginWithGoogle, loginAnonymously
   }
