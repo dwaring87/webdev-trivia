@@ -14,7 +14,7 @@
   const emit = defineEmits(['close']);
 
   const { public:config } = useRuntimeConfig();
-  const login_provider = ref();
+  const login_provider = ref('email');
   const email = ref();
   const password = ref();
   const email_required = ref(false);

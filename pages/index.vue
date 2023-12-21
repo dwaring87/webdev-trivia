@@ -27,27 +27,27 @@
     <div v-else-if="!isLoggedIn()" class="text-center mt-14">
       <h3 class="font-semibold text-gray-900">
         <MdiAccount class="inline mr-1 -mt-1" />
-        Login / Register
+        Register &amp; Login
       </h3>
       <div class="text-sm text-gray-500">
         <p class="mt-1">
           You'll need to login to create a new game.
         </p>
-        <p class="mt-4">
+        <!-- <p class="mt-4">
           You can login using an <strong>email and password</strong>, your <strong>Google account</strong>, or <strong>anonymously</strong>.
         </p>
         <p class="mt-1">
           If you want to use an <strong>email and password</strong>, you'll first need to <strong>Register</strong> to create an account.
-        </p>
+        </p> -->
       </div>
       <div class="my-6 flex justify-center gap-x-4">
-        <button @click="showLoginDialog = true" type="button" class="btn btn-amber">
-          <MdiLogin class="mr-2" aria-hidden="true" />
-          Login
-        </button>
         <button @click="showRegisterDialog = true" type="button" class="btn btn-green">
           <MdiRegister class="mr-2" aria-hidden="true" />
           Register
+        </button>
+        <button @click="showLoginDialog = true" type="button" class="btn btn-amber">
+          <MdiLogin class="mr-2" aria-hidden="true" />
+          Login
         </button>
       </div>
     </div>
