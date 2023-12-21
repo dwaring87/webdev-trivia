@@ -83,7 +83,7 @@
     email.value = undefined;
     password.value = undefined;
     error_message.value = undefined;
-    login_provider.value = undefined;
+    login_provider.value = 'email';
     emit('close');
   }
 
