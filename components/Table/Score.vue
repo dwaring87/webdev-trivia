@@ -11,7 +11,8 @@
   const { getScore, setScore } = useDatabase();
   const score = computed({
     get: () => {
-      return getScore(props.team, props.round);
+      const s = getScore(props.team, props.round);
+      return s === 0 ? 0 : (!s ? '&mdash;' : s);
     },
     set: (v) => {
       setScore(props.team, props.round, v);
@@ -40,7 +41,7 @@
       <input v-model="score" v-on:keyup.enter="save()" ref="score_ref"
         class="input score-input" type="number" name="score" id="score" />
     </div>
-    <p v-else class="py-2" v-html="!! score ? score : '&mdash;'"></p>
+    <p v-else class="py-2" v-html="score"></p>
   </td>
 </template>
 
