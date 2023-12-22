@@ -4,6 +4,7 @@
   // Sorting options
   const sort = ref("entry");
   const descending = ref(false);
+  setTeamSort(sort.value, descending.value);
   const toggleSort = (key) => {
     descending.value = key === sort.value ? !descending.value : descending.value;
     sort.value = key;
