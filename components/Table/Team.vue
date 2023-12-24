@@ -34,7 +34,7 @@
 <template>
   <td>
     <div v-if="edit">
-      <input v-model="name" v-on:keyup.enter="save()" @blur="watchTeamName" ref="team_ref"
+      <input v-model="name" ref="team_ref"
         class="input team-input" type="text" name="team" id="team" />
     </div>
     <p v-else class="py-2 min-w-[100px]">{{ team }}</p>

@@ -8,7 +8,7 @@
   const emit = defineEmits(['save']);
 
   // Get / Set score for a specific team and round
-  const { getScore, setScore } = useDatabase();
+  const { editable, getScore, setScore } = useDatabase();
   const score = computed({
     get: () => {
       const s = getScore(props.team, props.round);
@@ -41,7 +41,7 @@
       <input v-model="score" v-on:keyup.enter="save()" ref="score_ref"
         class="input score-input" type="number" name="score" id="score" />
     </div>
-    <p v-else class="py-2" v-html="score"></p>
+    <p v-else :class="[editable ? 'cursor-pointer' : 'cursor-default', 'py-2']" v-html="score"></p>
   </td>
 </template>
 

@@ -63,15 +63,14 @@
                     :class="[team_index % 2 ? 'bg-gray-100' : 'bg-white', 'hover:bg-orange-800/10']">
                   <TableEntry class="tc hidden sm:table-cell"
                     :team="team" />
-                  <TableTeam :class="[editable ? 'cursor-pointer' : 'cursor-default', 'tc text-left font-medium text-gray-900']"
-                    :team="team" :edit="editField === 'Team Name'" :focus="editField === 'Team Name' && editTeam === team"
-                    @click="edit('Team Name', team)" @save="save()" />
+                  <TableTeam class="tc text-left font-medium text-gray-900"
+                    :team="team" />
                   <TableRank class="tc bg-cyan-800/20"
                     :team="team" />
                   <TableTotal class="tc bg-cyan-800/20 hidden md:table-cell"
                     :team="team" />
                   <TableScore v-for="round in rounds" :key="`round-${round}`" 
-                    :class="[editable ? 'cursor-pointer' : 'cursor-default', 'tc hidden md:table-cell']" 
+                    class="tc hidden md:table-cell" 
                     :team="team" :round="round" :edit="editField === `Round ${round}`" :focus="editField === `Round ${round}` && editTeam === team"
                     @click="edit(`Round ${round}`, team)" @save="save()" />
                   <td class="tc table-cell md:hidden">
