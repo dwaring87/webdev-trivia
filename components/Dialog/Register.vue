@@ -3,6 +3,8 @@
   import MdiName from '~icons/mdi/microphone-variant';
   import MdiEmail from '~icons/mdi/email';
   import MdiPassword from '~icons/mdi/lock';
+  import MdiInviteCode from '~icons/mdi/lastpass';
+  import { useMD5 } from '../../composables/useMD5';
 
   const props = defineProps({
     open: {
@@ -11,13 +13,18 @@
     }
   });
   const emit = defineEmits(['close']);
+  const { public:config } = useRuntimeConfig();
+  const INVITE_CODE_HASH = config.invite_code_hash;
 
   const name = ref();
   const email = ref();
   const password = ref();
+  const invitecode = ref();
   const name_required = ref(false);
   const email_required = ref(false);
   const password_required = ref(false);
+  const invitecode_required = ref(false);
+  const invitecode_invalid = ref(false);
   const error_message = ref();
   const working = ref(false);
 
@@ -28,8 +35,11 @@
     name_required.value = !name.value || name.value === '';
     email_required.value = !email.value || email.value === '';
     password_required.value = !password.value || password.value === '';
+    invitecode_required.value = !invitecode.value || invitecode.value === '';
+    invitecode_invalid.value = useMD5(invitecode.value) !== INVITE_CODE_HASH;
 
-    if ( !name_required.value && !email_required.value && !password_required.value ) {
+    if ( !name_required.value && !email_required.value && !password_required.value 
+        && !invitecode_required.value && !invitecode_invalid.value ) {
       const error = await register(name.value, email.value, password.value);
       if ( error ) {
         error_message.value = error;
@@ -44,6 +54,7 @@
     name.value = undefined;
     email.value = undefined;
     password.value = undefined;
+    invitecode.value = undefined;
     error_message.value = undefined;
     emit('close');
   }
@@ -92,6 +103,20 @@
           type="password" name="password" id="password" class="input" placeholder="Your Strong Password" />
       </div>
       <p v-if="password_required && (!password || password === '')" class="required">A password is required!</p>
+    </div>
+
+    <!-- Invite Code -->
+    <div class="mt-4">
+      <label for="invite-code" class="label">Invite Code:</label>
+      <div class="relative mt-2 rounded-md shadow-sm">
+        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+          <MdiInviteCode class="h-5 w-5 text-gray-400" aria-hidden="true" />
+        </div>
+        <input v-model="invitecode" v-on:keyup.enter="submit()"
+          type="text" name="invite-code" id="invite-code" class="input" placeholder="Invite Code (ask an existing host for this)" />
+      </div>
+      <p v-if="invitecode_required && (!invitecode || invitecode === '')" class="required">The invite code is required!</p>
+      <p v-if="invitecode_invalid && invitecode && invitecode !== ''" class="required">The invite code is not valid!</p>
     </div>
 
     <div v-if="error_message" class="error mt-6">

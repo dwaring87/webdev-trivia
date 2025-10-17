@@ -13,6 +13,7 @@
     "@headlessui/vue": "^1.7.16",
     "@iconify-json/fluent": "^1.1.43",
     "@iconify-json/mdi": "^1.1.54",
+    "@iconify-json/ooui": "^1.2.12",
     "@nuxt/devtools": "latest",
     "@nuxtjs/tailwindcss": "^6.9.5",
     "@vite-pwa/nuxt": "^0.3.3",

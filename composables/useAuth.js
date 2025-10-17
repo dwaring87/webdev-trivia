@@ -14,8 +14,7 @@ const auth = getAuth(app);
 export default () => {
 
   // Catch login redirect results and errors
-  getRedirectResult(auth).then((result) => {
-  }).catch((error) => {
+  getRedirectResult(auth).then(() => {}).catch((error) => {
     alert("Error: Could not login with the requested provider [" + error.message + "]");
   });
 

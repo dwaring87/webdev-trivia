@@ -1,4 +1,5 @@
 import Icons from 'unplugin-icons/vite';
+import { useMD5 } from './composables/useMD5';
 
 // Parse social string into array of objects
 // type,name,url|type,name,url...
@@ -11,6 +12,9 @@ const social = [];
     url: parts[2]
   });
 });
+
+// Hash the invite code
+const invite_code_hash = useMD5(process.env.APP_INVITE_CODE);
 
 
 export default defineNuxtConfig({
@@ -93,6 +97,7 @@ export default defineNuxtConfig({
       title: process.env.APP_TITLE || 'Trivia Score Sheet',
       rounds: process.env.APP_ROUNDS || 5,
       social: social,
+      invite_code_hash: invite_code_hash,
       firebase: {
         apiKey: process.env.FIREBASE_API_KEY || 'NOT_SET',
         authDomain: process.env.FIREBASE_AUTH_DOMAIN,

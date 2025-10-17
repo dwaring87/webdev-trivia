@@ -3,7 +3,9 @@
   import MdiEmail from '~icons/mdi/email';
   import MdiPassword from '~icons/mdi/lock';
   import MdiGoogle from '~icons/mdi/google';
-  import MdiAnonymous from '~icons/mdi/incognito';
+  import MdiGuest from '~icons/ooui/user-temporary-ltr';
+  import MdiInviteCode from '~icons/mdi/lastpass';
+  import { useMD5 } from '../../composables/useMD5';
 
   const props = defineProps({
     open: {
@@ -14,13 +16,18 @@
   const emit = defineEmits(['close']);
 
   const { public:config } = useRuntimeConfig();
-  const login_provider = ref('email');
+  const INVITE_CODE_HASH = config.invite_code_hash;
+
+  const login_provider = ref();
   const email = ref();
   const password = ref();
   const email_required = ref(false);
   const password_required = ref(false);
   const email_ref = ref();
   const error_message = ref();
+  const invitecode = ref();
+  const invitecode_required = ref(false);
+  const invitecode_invalid = ref(false);
   const working = ref(false);
 
   // Perform the provider-specific login function
@@ -36,8 +43,8 @@
     else if ( login_provider.value === 'google' ) {
       error = await login_google();
     }
-    else if ( login_provider.value === 'anonymous' ) {
-      error = await login_anonymous();
+    else if ( login_provider.value === 'guest' ) {
+      error = await login_guest();
     }
     working.value = false;
 
@@ -66,9 +73,21 @@
     return await loginWithGoogle();
   }
 
-  // Perform anonymous login
-  const login_anonymous = async () => {
-    return await loginAnonymously();
+  // Perform guest login
+  const login_guest = async () => {
+    invitecode_required.value = !invitecode.value || invitecode.value === '';
+    if ( !!invitecode_required.value ) {
+      return "Invite Code is required";
+    }
+
+    invitecode_invalid.value = useMD5(invitecode.value) !== INVITE_CODE_HASH;
+    if ( !!invitecode_invalid.value ) {
+      return "Invite Code is invalid";
+    }
+
+    if ( !invitecode_required.value && !invitecode_invalid.value ) {
+      return await loginAnonymously();
+    }
   }
 
   // Show the reset password dialog
@@ -83,7 +102,8 @@
     email.value = undefined;
     password.value = undefined;
     error_message.value = undefined;
-    login_provider.value = 'email';
+    login_provider.value = undefined;
+    invitecode.value = undefined;
     emit('close');
   }
 
@@ -101,15 +121,15 @@
       <template #title>Login</template>
 
       <!-- Login Options -->
-      <div v-if="!login_provider" class="mt-12 mb-4 flex flex-col gap-4">
-        <button class='btn btn-blue' @click="login_provider = 'email'">
-          <MdiEmail class='mr-2 mt-0.5' />Login with Email &amp; Password
+      <div v-if="!login_provider" class="mt-12 mb-4 flex flex-col gap-4 min-w-[250px]">
+        <button class='btn btn-blue w-fill' @click="login_provider = 'email'">
+          <MdiEmail class='mr-2 mt-0.5' />Account Login
         </button>
-        <button class='btn btn-blue' @click="login_provider = 'google'">
+        <!-- <button class='btn btn-blue w-fill' @click="login_provider = 'google'">
           <MdiGoogle class='mr-2 mt-0.5' />Login with Google
-        </button>
-        <button class='btn btn-blue' @click="login_provider = 'anonymous'">
-          <MdiAnonymous class='mr-2 mt-0.5' />Login Anonymously
+        </button> -->
+        <button class='btn btn-blue w-fill' @click="login_provider = 'guest'">
+          <MdiGuest class='mr-2 mt-0.5' />Guest Login
         </button>
       </div>
 
@@ -164,13 +184,25 @@
         </p>
       </div>
 
-      <!-- Anonymous Provider -->
-      <div v-else-if="login_provider === 'anonymous'">
+      <!-- Guest Login Provider -->
+      <div v-else-if="login_provider === 'guest'">
         <p class="description">
-          An <strong>anonymous login</strong> will allow you to create new games and edit any of your 
+          A <strong>guest login</strong> will allow you to create new games and edit any of your 
           previous games on this browser while you are logged in.  <strong>Once you logout, you will 
           no longer be able to edit any of your previous games</strong>.
         </p>
+        <p class="description mt-4">An <strong>invite code</strong> is required for a guest login.  Ask an existing host for the 
+          invite code if you don't already have it.</p>
+        <div class="mt-4">
+          <label for="invite-code" class="label">Invite Code:</label>
+          <div class="relative mt-2 rounded-md shadow-sm">
+            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <MdiInviteCode class="h-5 w-5 text-gray-400" aria-hidden="true" />
+            </div>
+            <input v-model="invitecode" v-on:keyup.enter="submit()"
+              type="text" name="invite-code" id="invite-code" class="input" placeholder="Invite Code (ask an existing host for this)" />
+          </div>
+        </div>
       </div>
 
       <!-- Error Message -->
