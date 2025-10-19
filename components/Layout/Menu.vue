@@ -33,7 +33,7 @@
   const PAGE_CURRENT_GAME = computed(() => { 
     return { label: 'Current Game', sublabel: `${date.value} | ${host.value}`, class: 'btn-blue', icon: MdiCurrentGame, click: () => navigateTo(`/game/${currentGame.value}`) };
   });
-  const PAGE_PAST_GAMES = { label: 'Past Games', class: 'btn-blue', icon: MdiPastGames, click: () => navigateTo('/history') };
+  const PAGE_PAST_GAMES = { label: 'All Games', class: 'btn-blue', icon: MdiPastGames, click: () => navigateTo('/history') };
 
   // Login functions, displayed when not logged in
   const USER_LOGIN = { label: 'Login', class: 'btn-amber', icon: MdiLogin, click: () => showLoginDialog.value = true };
@@ -75,9 +75,9 @@
     }
 
     // Add page links back to current game or past games table
-    if ( (route.path === '/' || route.path === '/history') && hasGame.value ) {
-      rtn.push(PAGE_CURRENT_GAME.value);
-    }
+    // if ( (route.path === '/' || route.path === '/history') && hasGame.value ) {
+    //   rtn.push(PAGE_CURRENT_GAME.value);
+    // }
     if ( route.path === '/' || route.path.startsWith('/game') ) {
       rtn.push(PAGE_PAST_GAMES);
     }

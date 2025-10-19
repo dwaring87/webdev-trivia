@@ -2,6 +2,11 @@
   import MdiAccount from '~icons/mdi/account-circle';
   import MdiNext from '~icons/mdi/chevron-right';
 
+  const props = defineProps({
+    max: Number,
+    sort: String
+  });
+
   // Get sorted list of games
   // Note: the games are NOT reactive - need to be manually refreshed
   const { getGames } = useDatabase();
@@ -14,7 +19,7 @@
         : a[sort.value] > b[sort.value] ? (descending.value ? -1 : 1) 
         : 0;
     });
-    return s;
+    return props.max ? s.slice(0, props.max) : s;
   });
 
   // Check if a particular game is editable by the current user
@@ -24,7 +29,7 @@
   }
 
   // Sorting options
-  const sort = ref('date');
+  const sort = ref(props.sort || 'date');
   const descending = ref(true);
   const toggleSort = async (key) => {
     descending.value = key === sort.value ? !descending.value : descending.value;
@@ -78,6 +83,10 @@
                 </tr>
               </tbody>
             </table>
+            <div v-if="props.max" class="bg-cyan-800 text-white opacity-70 hover:opacity-90 flex justify-end items-center px-2 py-1 cursor-pointer" @click="() => navigateTo('/history')">
+              <p>Show All Games</p>
+              <MdiNext class="inline ml-2" />
+            </div>
           </div>
         </div>
       </div>

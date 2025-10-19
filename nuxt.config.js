@@ -14,7 +14,7 @@ const social = [];
 });
 
 // Hash the invite code
-const invite_code_hash = useMD5(process.env.APP_INVITE_CODE);
+const invite_code_hash = useMD5(process.env.APP_INVITE_CODE || 'trivia');
 
 
 export default defineNuxtConfig({

@@ -1,14 +1,14 @@
 <script setup>
+  import GamesTable from '~/components/Games/Table.vue';
   import MdiLoading from '~icons/mdi/progress-download';
   import MdiLogin from '~icons/mdi/login';
   import MdiRegister from '~icons/mdi/account-plus';
   import MdiAccount from '~icons/mdi/account-circle';
   import MdiNewGame from '~icons/mdi/table-large-plus';
-  import MdiCurrentGame from '~icons/mdi/table-large';
-  import MdiPastGames from '~icons/mdi/history';
+  import MdiWelcome from '~icons/mdi/hand-wave';
+  import MdiRecent from '~icons/mdi/recent';
 
   const { initializing, isLoggedIn, displayName } = useAuth();
-  const { hasGame, currentGame, date, host } = useDatabase();
 
   const showGameDialog = ref(false);
   const showLoginDialog = ref(false);
@@ -33,12 +33,6 @@
         <p class="mt-1">
           You'll need to login to create a new game.
         </p>
-        <!-- <p class="mt-4">
-          You can login using an <strong>email and password</strong>, your <strong>Google account</strong>, or <strong>anonymously</strong>.
-        </p>
-        <p class="mt-1">
-          If you want to use an <strong>email and password</strong>, you'll first need to <strong>Register</strong> to create an account.
-        </p> -->
       </div>
       <div class="my-6 flex justify-center gap-x-4">
         <button @click="showRegisterDialog = true" type="button" class="btn btn-green">
@@ -52,11 +46,13 @@
       </div>
     </div>
 
-    <!-- NO GAME CREATED: Show Create Game Button -->
+    <!-- LOGGED IN: Show create game button -->
     <div class="text-center p-8" v-else>
-      <MdiNewGame class="inline text-2xl" />
-      <h3 class="mt-2 text-sm font-semibold text-gray-900">Welcome<span v-if="displayName">, {{ displayName }}</span>!</h3>
-      <p class="mt-4 text-sm text-gray-500">Get started by creating a new game!</p>
+      <h3 class="mt-2 font-semibold text-gray-900">
+        <MdiWelcome class="inline mr-1 -mt-1" />
+        Welcome<span v-if="displayName">, {{ displayName }}</span>!
+      </h3>
+      <p class="mt-4 text-sm text-gray-500">Get started by creating a new game</p>
       <div class="mt-6">
         <button @click="showGameDialog = true" type="button" class="btn btn-green">
           <MdiNewGame class="mr-2" aria-hidden="true" />
@@ -65,19 +61,13 @@
       </div>
     </div>
 
-    <!-- Links to Current / Past Games -->
-    <div class="mt-8 flex flex-col w-fit mx-auto gap-y-4">
-      <button v-if="hasGame" class="btn btn-blue" @click="navigateTo(`/game/${currentGame}`)">
-        <MdiCurrentGame class="mr-2" />
-        <span class='flex flex-col'>
-          Return to Current Game
-          <span class='text-xs opacity-60'>{{ date }} | {{ host }}</span>
-        </span>
-      </button>
-      <button class="btn btn-blue" @click="navigateTo('/history')">
-        <MdiPastGames class="mr-2" />
-        View Past Games
-      </button>
+    <!-- Recent Games table -->
+    <div class="max-w-xl mx-auto mt-12">
+      <h3 class="text-center font-semibold text-gray-900">
+        <MdiRecent class="inline mr-1 -mt-1" />
+        Recent Games
+      </h3>
+      <GamesTable max="3" />
     </div>
 
     <DialogLogin :open="showLoginDialog" @close="showLoginDialog = false" />
