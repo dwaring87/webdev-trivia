@@ -58,6 +58,7 @@ const _sort_descending = ref(false);
 // Current Game watcher:
 // set value listeners that update the vue refs for the current game properties
 watch(currentGame, (n, o) => {
+  let changedGame = true;
   if ( o ) {
     off(dbRef(database, `games/${o}/date`));
     off(dbRef(database, `games/${o}/rounds`));
@@ -70,7 +71,13 @@ watch(currentGame, (n, o) => {
     onValue(dbRef(database, `games/${n}/rounds`), (s) => rounds.value = s.val());
     onValue(dbRef(database, `games/${n}/host`), (s) => host.value = s.val());
     onValue(dbRef(database, `games/${n}/owner`), (s) => owner.value = s.val());
-    onValue(dbRef(database, `games/${n}/scores`), (s) => scores.value = s.val());
+    onValue(dbRef(database, `games/${n}/scores`), (s) => {
+      scores.value = s.val()
+      if ( changedGame ) {
+        changedGame = false;
+        CALC();
+      }
+    });
   }
 }, { immediate: true });
 
