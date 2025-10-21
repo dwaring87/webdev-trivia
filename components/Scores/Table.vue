@@ -1,4 +1,5 @@
 <script setup>
+  import IcBowlOff from '~icons/tabler/bowling';
   const { editable, rounds, teams, setTeamSort } = useDatabase();
 
   // Sorting options
@@ -39,7 +40,7 @@
   <div>
     <div class="my-8 flow-root">
       <div class="-m-1 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="inline-block w-full py-2 align-middle sm:px-6 lg:px-8">
+        <div class="inline-block w-full py-2 align-middle px-2 sm:px-6 lg:px-8">
           <div class="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 rounded-md md:rounded-lg">
             <table class="w-full divide-y divide-cyan-900">
               <thead class="bg-cyan-800 text-white text-center">
@@ -56,6 +57,7 @@
                     :label="`Round ${i}`" :sortKey="`round${i}`" :sort="sort" :descending="descending" @click="toggleSort(`round${i}`)" />
                   <TableHeader class="table-cell md:hidden"
                     label="Scores" sortKey="total" :sort="sort" :descending="descending" @click="toggleSort('total')" />
+                  <th class="px-4 hidden md:table-cell"><IcBowlOff class="mx-auto" /></th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 bg-white text-center text-gray-500">
@@ -88,6 +90,10 @@
                             :team="team" :round="round" :edit="editField === round" :focus="editField === round && editTeam === team"
                             @click="edit(round, team)" @save="save()" />
                         </tr>
+                        <tr>
+                          <td><IcBowlOff class="mx-auto my-1" /></td>
+                          <TableBowlOff :team="team" />
+                        </tr>
                         <tr class="border-t-[0.1rem] border-gray-300">
                           <td class="font-bold pt-2">Total</td>
                           <TableTotal :team="team" class="font-semibold pt-2" />
@@ -95,6 +101,7 @@
                       </tbody>
                     </table>
                   </td>
+                  <TableBowlOff class="hidden md:table-cell" :team="team" />
                 </tr>
               </tbody>
             </table>
